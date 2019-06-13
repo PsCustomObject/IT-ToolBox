@@ -1,0 +1,13 @@
+﻿<Project Synchronized="False" SyncFilter="*.ps1;*.psm1;*.psd1;*.ps1xml;*.psf;*.pss;*.xml;*.help.txt" AutoExportFunctions="True" AutoExportPS1XMLFiles="True">
+  <Version>2.1</Version>
+  <FileID>02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08</FileID>
+  <ProjectType>1</ProjectType>
+  <Folders />
+  <Files>
+    <File Build="2">IT-ToolBox.psd1</File>
+    <File Build="0" ExportFunctions="True">IT-ToolBox.psm1</File>
+    <File Build="1" Shared="False" ReferenceFunction="Invoke-Test-Module_ps1" ExportFunctions="False">Test-Module.ps1</File>
+    <File Build="1">.gitignore</File>
+  </Files>
+  <StartupScript>C:\Users\daniele.catanesi\OneDrive\GitHub\IT-ToolBox\Test-Module.ps1</StartupScript>
+</Project>
