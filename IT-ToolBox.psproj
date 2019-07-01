@@ -2,12 +2,41 @@
   <Version>2.1</Version>
   <FileID>02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08</FileID>
   <ProjectType>1</ProjectType>
-  <Folders />
+  <Folders>
+    <Folder>Public</Folder>
+    <Folder>Private</Folder>
+    <Folder>lib</Folder>
+  </Folders>
   <Files>
     <File Build="2">IT-ToolBox.psd1</File>
     <File Build="0" ExportFunctions="True">IT-ToolBox.psm1</File>
     <File Build="1" Shared="False" ReferenceFunction="Invoke-Test-Module_ps1" ExportFunctions="False">Test-Module.ps1</File>
     <File Build="1">.gitignore</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Add-Encryption_ps1" ExportFunctions="False">Public\Add-Encryption.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Get-GnuPgPackage_ps1" ExportFunctions="False">Public\Get-GnuPgPackage.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Get-OsUpTime_ps1" ExportFunctions="False">Public\Get-OsUpTime.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Get-ScriptDirectory_ps1" ExportFunctions="False">Public\Get-ScriptDirectory.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Get-ScriptName_ps1" ExportFunctions="False">Public\Get-ScriptName.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-LogEntry_ps1" ExportFunctions="False">Public\New-LogEntry.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-PhoneticPassword_ps1" ExportFunctions="False">Public\New-PhoneticPassword.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-RandomPassword_ps1" ExportFunctions="False">Public\New-RandomPassword.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-RandomString_ps1" ExportFunctions="False">Public\New-RandomString.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-ScpUpload_ps1" ExportFunctions="False">Public\New-ScpUpload.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-StringConversion_ps1" ExportFunctions="False">Public\New-StringConversion.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-StringDecryption_ps1" ExportFunctions="False">Public\New-StringDecryption.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-StringEncryption_ps1" ExportFunctions="False">Public\New-StringEncryption.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Remove-Encryption_ps1" ExportFunctions="False">Public\Remove-Encryption.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Remove-SpecialCharacters_ps1" ExportFunctions="False">Public\Remove-SpecialCharacters.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-FileName_ps1" ExportFunctions="False">Public\Test-FileName.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsDate_ps1" ExportFunctions="False">Public\Test-IsDate.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsEmail_ps1" ExportFunctions="False">Public\Test-IsEmail.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsIpAddress_ps1" ExportFunctions="False">Public\Test-IsIpAddress.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsUrl_ps1" ExportFunctions="False">Public\Test-IsUrl.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsValidPath_ps1" ExportFunctions="False">Public\Test-IsValidPath.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-RegistryValue_ps1" ExportFunctions="False">Public\Test-RegistryValue.ps1</File>
+    <File Build="2">lib\WinSCPnet.dll</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-ScpSession_ps1" ExportFunctions="False">Public\New-ScpSession.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsValidUpn_ps1" ExportFunctions="False">Public\Test-IsValidUpn.ps1</File>
   </Files>
   <StartupScript>C:\Users\daniele.catanesi\OneDrive\GitHub\IT-ToolBox\Test-Module.ps1</StartupScript>
 </Project>

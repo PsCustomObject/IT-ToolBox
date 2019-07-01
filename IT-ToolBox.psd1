@@ -95,7 +95,28 @@
 	# List of all files packaged with this module
 	FileList = @(
 		'Public\New-LogEntry.ps1',
-		'Public\New-RandomPassword.ps1'
+		'Public\New-RandomPassword.ps1',
+		'Public\New-StringConversion.ps1',
+		'Public\Test-IsEmail.ps1',
+		'Public\Test-IsIpAddress.ps1',
+		'Public\Test-FileName.ps1',
+		'Public\Test-IsUrl.ps1',
+		'Public\New-PhoneticPassword.ps1',
+		'Public\Remove-SpecialCharacters.ps1',
+		'Public\Get-OsUpTime.ps1',
+		'Public\Test-IsDate.ps1',
+		'Public\Test-IsValidPath.ps1',
+		'Public\Get-ScriptDirectory.ps1',
+		'Public\Get-ScriptName.ps1',
+		'Public\Test-RegistryValue.ps1',
+		'Public\New-RandomString.ps1',
+		'Public\New-StringEncryption.ps1',
+		'Public\New-StringDecryption.ps1',
+		'Public\Get-GnuPgPackage.ps1',
+		'Public\Add-Encryption.ps1',
+		'Public\Remove-Encryption.ps1',
+		'Public\New-ScpUpload.ps1',
+		'Public\Test-IsValidUpn.ps1'
 	)
 	
 	# Private data to pass to the module specified in ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
