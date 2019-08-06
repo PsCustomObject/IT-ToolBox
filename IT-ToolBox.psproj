@@ -35,8 +35,8 @@
     <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsValidPath_ps1" ExportFunctions="False">Public\Test-IsValidPath.ps1</File>
     <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-RegistryValue_ps1" ExportFunctions="False">Public\Test-RegistryValue.ps1</File>
     <File Build="2">lib\WinSCPnet.dll</File>
-    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-ScpSession_ps1" ExportFunctions="False">Public\New-ScpSession.ps1</File>
     <File Build="2" Shared="True" ReferenceFunction="Invoke-Test-IsValidUpn_ps1" ExportFunctions="False">Public\Test-IsValidUpn.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-New-ScpDownload_ps1" ExportFunctions="False">Public\New-ScpDownload.ps1</File>
   </Files>
   <StartupScript>C:\Users\daniele.catanesi\OneDrive\GitHub\IT-ToolBox\Test-Module.ps1</StartupScript>
 </Project>
