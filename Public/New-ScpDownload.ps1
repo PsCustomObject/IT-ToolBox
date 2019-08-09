@@ -48,19 +48,7 @@
 		$CloseSession
 	)
 	
-	# Check assembly is available
-	try
-	{
-		# Import required assembly
-		Add-Type -Path 'C:\Program Files (x86)\WinSCP\WinSCPnet.dll'
-	}
-	catch
-	{
-		throw [System.IO.FileNotFoundException] 'C:\Program Files (x86)\WinSCP\WinSCPnet.dll not found!'
-		
-		return
-	}
-	
+	# Define session parameters
 	[hashtable]$SessionParameters = @{ }
 	$SessionParameters.Add('HostName', $RemoteHost)
 	
@@ -91,29 +79,41 @@
 	
 	try
 	{
+		# Create session options object
 		[WinSCP.SessionOptions]$SessionOptions = New-Object -TypeName WinSCP.SessionOptions -Property $SessionParameters
 		
+		# Create new session
 		[WinSCP.Session]$ScpSession = New-Object -TypeName WinSCP.Session
 		
+		# Open session
 		$ScpSession.Open($SessionOptions)
 		
 		if ($DeleteSource)
 		{
+			# Download files and delete source
 			$ScpSession.GetFiles($RemotePath, $LocalPath, $true)
 		}
 		else
 		{
+			# Download files only
 			$ScpSession.GetFiles($RemotePath, $LocalPath)
 		}
 	}
 	catch
 	{
-		Write-Error $_.Exception.Message
+		# Save exception message
+		[string]$reportedException = $_.Exception.Message
+		
+		Write-Warning -Message 'Session could not be opened - Reported exception is'
+		Write-Warning -Message $reportedException
 	}
 	
 	finally
 	{
-		# Close session
-		$ScpSession.Dispose()
+		if ($CloseSession)
+		{
+			# Close session
+			$ScpSession.Dispose()
+		}
 	}
 }
