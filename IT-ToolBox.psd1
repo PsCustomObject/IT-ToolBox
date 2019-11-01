@@ -2,7 +2,8 @@
 	===========================================================================
 	 Created on:   	13.06.2019 13:58
 	 Created by:   	PsCustomObject - Daniele Catanesi
-	 Filename:     	IT-ToolBox.psd1
+	 Modified on:   01.11.2019
+   Filename:     	IT-ToolBox.psd1
 	 -------------------------------------------------------------------------
 	 Module Manifest
 	-------------------------------------------------------------------------
@@ -16,7 +17,7 @@
 	RootModule = 'IT-ToolBox.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '2.0.0.0'
+	ModuleVersion = '2.0.1.0'
 	
 	# ID used to uniquely identify this module
 	GUID = '02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08'
@@ -116,7 +117,10 @@
 		'Public\Add-Encryption.ps1',
 		'Public\Remove-Encryption.ps1',
 		'Public\New-ScpUpload.ps1',
-		'Public\Test-IsValidUpn.ps1'
+		'Public\Test-IsValidUpn.ps1',
+    'Public\New-Timer.ps1',
+    'Public\Stop-Timer.ps1',
+    'Public\Get-ElapsedTime.ps1'
 	)
 	
 	# Private data to pass to the module specified in ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
