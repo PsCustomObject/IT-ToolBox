@@ -1,14 +1,14 @@
 ﻿function New-StringEncryption
 {
-<#
+	<#
 	.SYNOPSIS
 		Encryps a string using RijndaelManaged Cryptography
 	
 	.DESCRIPTION
-		New-StringEncryption is used to encrypt a string using RijndaelManaged Cryptography allowing
+		New-StringEncryption is used to encrypt a string using RijndaelManaged Cryptography allowing 
 		user to specify Salt, Passphrase and Intersecting Vector values.
 		
-		For security reason Intersecting Vector (IV) value should be changed on each machine.
+		For better security Intersecting Vector (IV) value should be changed on each machine where function is used.
 	
 	.PARAMETER StringToEncrypt
 		Any string that needs to be encrypted. Parameter is mandatory and cannot be empty.
@@ -19,8 +19,9 @@
 		If parameter is not specified hostname value will be used.
 	
 	.PARAMETER EncryptSalt
-		Specify a custom string to use as the Encryption Salt will
-		default to computername if not specified
+		Specify a custom string to use as the Encryption Salt.
+	
+		If parameter is not specified hostname value will be used.
 	
 	.PARAMETER IntersectingVector
 		Intersecting Vector value used in the encryption process. If parameter is not used a
@@ -28,10 +29,7 @@
 	
 	.EXAMPLE
 		PS C:\> New-StringEncryption
-	
-	.NOTES
-		Additional information about the function.
-#>
+	#>
 	
 	[OutputType([string])]
 	param
@@ -56,7 +54,7 @@
 	)
 	
 	# Instantiate empty return value
-	[string]$returnValue = $null
+	[string]$EncryptedString = $null
 	
 	# Instantiate COM Object for RijndaelManaged Cryptography
 	[System.Security.Cryptography.RijndaelManaged]$encryptionObject = New-Object System.Security.Cryptography.RijndaelManaged
@@ -64,15 +62,15 @@
 	# Check if we have a passphrase
 	if ([string]::IsNullOrEmpty($EncryptPassPhrase) -eq $true)
 	{
+		# Use hostname
 		$EncryptPassPhrase = $env:Computername
-		#$PassPhrase = New-RandomString -StringLength 14
 	}
 	
 	# Check if we have a salt value
 	if ([string]::IsNullOrEmpty($EncryptSalt) -eq $true)
 	{
+		# Use hostname
 		$EncryptSalt = $env:Computername
-		#$EncryptSalt = New-RandomString -StringLength 12
 	}
 	
 	# Convert Salt and Passphrase to UTF8 Bytes array
@@ -122,8 +120,8 @@
 	[byte[]]$result = $memoryStream.ToArray()
 	
 	# Converts the array from Base 64 to a string and returns 
-	$returnValue = $([Convert]::ToBase64String($result))
+	$EncryptedString = $([Convert]::ToBase64String($result))
 	
 	# Return value
-	return $returnValue
+	return $EncryptedString
 }

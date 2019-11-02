@@ -1,5 +1,13 @@
 # IT-ToolBox - Change History
 
+## Version 2.1.0.0 - 02.11.2019
+
+- **New** cmdlet *New-ApiRequest* to create OAuth2 api requests
+- **Fixed** comment based help for *New-StringEncryption* cmdlet
+- **Fixed** comment based help for *New-StringDecryption* cmdlet
+- **Fixed** wrong return data type for *Test-IsEmail* cmdlet
+- **Updated** cmdlet *Test-IsUrl* to implement better checks on empty string
+
 ## Version 2.0.2.0 - 01.11.2019
 
 - **New** created change-log file

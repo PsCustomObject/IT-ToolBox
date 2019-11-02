@@ -1,42 +1,49 @@
-function Test-EmailFormat
+function Test-IsEmail
 {
 	<#
-		.SYNOPSIS
-			Function will check format of an email address.
+	.SYNOPSIS
+		Function to check if a string is an RFC email address.
 	
-		.DESCRIPTION
-			Function will return $True if input string is a RFC
-			compliant email address or $False if not.
-		
-		.PARAMETER EmailAddress
-			A string representing the email address to be tested.
-		
-		.EXAMPLE
-			PS C:\> Test-EmailFormat -EmailAddress 'test@sample.com'
-		
-		.NOTES
-			Additional information about the function.
+	.DESCRIPTION
+		Function will check if an input string is an RFC complient email address. 
+	
+	.PARAMETER EmailAddress
+		A string representing the email address to be checked
+	
+	.EXAMPLE
+		PS C:\> Test-IsEmail -EmailAddress 'value1'
+	
+	.OUTPUTS
+		System.Boolean
+	
+	.LINK
+		Restrictions on email addresses
+		https://tools.ietf.org/html/rfc3696#section-3
 	#>
 	
-	[OutputType([Boolean])]
+	[OutputType([bool])]
 	param
 	(
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]
-		[Alias('Email', 'Mail', 'MailAddress', 'Address')]
-		[string]$EmailAddress
+		[Alias('Email', 'Mail', 'Address')]
+		[string]
+		$EmailAddress
 	)
 	
 	try
 	{
-		# Check email is RFC compliant address
-		[void]::([mailaddress]$EmailAddress)
+		# Check if address is RFC compliant	
+		[void]([mailaddress]$EmailAddress)
 		
-		return $truee
+		Write-Verbose -Message "Address $EmailAddress is an RFC compliant address"
+		
+		return $true
 	}
 	catch
 	{
-		# Invalid email
+		Write-Verbose -Message "Address $EmailAddress is not an RFC compliant address"
+		
 		return $false
 	}
 }

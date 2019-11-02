@@ -1,6 +1,6 @@
 ﻿function New-StringConversion
 {
-<#
+	<#
 	.SYNOPSIS
 		Function to remove any non-unicode character from a string.
 	
@@ -63,7 +63,7 @@
 		Replaces any special character in string replacing any white space with three dashes:
 	
 		Grosse---Zimmerpflanzen---fur---daheim---e---Buro
-#>
+	#>
 	
 	[CmdletBinding(DefaultParameterSetName = 'RemoveSpaces',
 				   ConfirmImpact = 'High',
