@@ -8,7 +8,7 @@ Complete history of development and changes can be found in the **[ChangeLog](ht
 
 ## Development and distribution
 
-All code in the module is released under the *MIT* license which can be found [here](https://github.com/PsCustomObject/IT-ToolBox/blob/master/LICENSE) so you are free to download, modify and redistribute part or all of the module's code.
+All code in the module is released under the *[MIT license](https://github.com/PsCustomObject/IT-ToolBox/blob/master/LICENSE)*  so you are free to download, modify and redistribute part or all of the module's code.
 
 ## Documentation
 
