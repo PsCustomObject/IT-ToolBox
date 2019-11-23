@@ -4,4 +4,5 @@
 *.RestorePoint.*
 *.Run.ps1
 *.Package.ps1
+IT-ToolBox.psproj
 CustomMenu.inf*tempPoint*
