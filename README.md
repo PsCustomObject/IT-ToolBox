@@ -21,3 +21,8 @@ This is a work in progress so if an article is missing feel free to leave a comm
 All code is thoroughly before being released and used in a production environment, *[eating my own dowg food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)*, so usually I notice bugs immediately and try to fix them as soon as possible while also creatinga an issue to keep track of the updates. 
 
 Anyhow if you experience an issue, have a suggestion, idea for a new feature or enhancement for the code or performance please use **[Issue Board](https://github.com/PsCustomObject/IT-ToolBox/issues)** to submit a request so that I can analyze and act upon, of course PR are more than welcome!
+
+----
+## Note on removed functions
+
+All SCP related functions are being removed from the module as those are being developed and integrated as part of as standalone module called **PowerSCP** which can find [here](https://github.com/PsCustomObject/PowerScp)
