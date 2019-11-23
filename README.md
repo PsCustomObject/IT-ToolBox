@@ -25,4 +25,4 @@ Anyhow if you experience an issue, have a suggestion, idea for a new feature or 
 ----
 ## Note on removed functions
 
-All SCP related functions are being removed from the module as those are being developed and integrated as part of as standalone module called **PowerSCP** which can find [here](https://github.com/PsCustomObject/PowerScp)
+All SCP related functions are being removed from the module as those are being developed and integrated as part of as standalone module called **PowerSCP** which can be found [here](https://github.com/PsCustomObject/PowerScp)
