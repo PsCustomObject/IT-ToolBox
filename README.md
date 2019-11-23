@@ -12,10 +12,12 @@ All code in the module is released under the *MIT* license which can be found [h
 
 ## Documentation
 
-While plan is to create a *GitBook* for the project I am creating documentation to the module's functions in my blog via a series of artciles so refer to my **[website](https://PsCustomObject.github.io)** for examples and documentation of the various functions in the module. If an article is missing feel free to leave a comment or create an issue in the issue board.
+Plan is to create a dedicated Wiki for the project but I'm also creating a list of posts on my **[website](https://PsCustomObject.github.io)** containing examples of the various functions making up the module. 
+
+This is a work in progress so if an article is missing feel free to leave a comment or create an issue in the issue board.
 
 ## Issue reporting
 
-All code is thoroughly before being released and used in a production environment, *[eating my own dowg food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)*, so usually I notice bugs immediately and try to fix them as soon as possible trying to file an issue for tracking purposes.
+All code is thoroughly before being released and used in a production environment, *[eating my own dowg food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)*, so usually I notice bugs immediately and try to fix them as soon as possible while also creatinga an issue to keep track of the updates. 
 
-Anyhow if you experience an issue, have a suggestion, idea for a new feature or enhancement for the code or performance please use **[Issue Board](https://github.com/PsCustomObject/IT-ToolBox/issues)** to submit a request so that I can analyze and act upon.
+Anyhow if you experience an issue, have a suggestion, idea for a new feature or enhancement for the code or performance please use **[Issue Board](https://github.com/PsCustomObject/IT-ToolBox/issues)** to submit a request so that I can analyze and act upon, of course PR are more than welcome!
