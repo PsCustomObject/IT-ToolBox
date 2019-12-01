@@ -1,23 +1,10 @@
-﻿<#	
-	===========================================================================
-	 Created on:   	13.06.2019 13:58
-	 Created by:   	PsCustomObject - Daniele Catanesi
-	 Modified on:   02.11.2019
-   	 Filename:     	IT-ToolBox.psd1
-	 -------------------------------------------------------------------------
-	 Module Manifest
-	-------------------------------------------------------------------------
-	 Module Name: IT-ToolBox
-	===========================================================================
-#>
-
-@{
+﻿@{
 	
 	# Script module or binary module file associated with this manifest
 	RootModule = 'IT-ToolBox.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '2.1.0.0'
+	ModuleVersion = '2.2.0.0'
 	
 	# ID used to uniquely identify this module
 	GUID = '02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08'
@@ -110,6 +97,7 @@
 		'Public\Get-ScriptDirectory.ps1',
 		'Public\Get-ScriptName.ps1',
 		'Public\Test-RegistryValue.ps1',
+		'Public\New-ExchangeConnection.ps1'
 		'Public\New-RandomString.ps1',
 		'Public\New-StringEncryption.ps1',
 		'Public\New-StringDecryption.ps1',
