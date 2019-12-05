@@ -1,8 +1,13 @@
 # IT-ToolBox - Change History
 
+## Version 2.2.0.0 - 05.12.2019
+
+- **New** cmdlet *New-ExchangeSession* to create a remote PowerShell session to an on-premise Exchange server [2](https://github.com/PsCustomObject/IT-ToolBox/issues/2)
+- **New** cmdlet *Close-ExchangeSession* to close a remote PowerShell session to an on-premise or online Exchange server
+
 ## Version 2.1.0.0 - 02.11.2019
 
-- **New** cmdlet *New-ApiRequest* to create OAuth2 api requests
+- **New** cmdlet *New-ApiRequest* to create OAuth2 API requests
 - **Fixed** comment based help for *New-StringEncryption* cmdlet
 - **Fixed** comment based help for *New-StringDecryption* cmdlet
 - **Fixed** wrong return data type for *Test-IsEmail* cmdlet
