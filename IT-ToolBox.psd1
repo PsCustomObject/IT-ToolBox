@@ -97,7 +97,8 @@
 		'Public\Get-ScriptDirectory.ps1',
 		'Public\Get-ScriptName.ps1',
 		'Public\Test-RegistryValue.ps1',
-		'Public\New-ExchangeConnection.ps1'
+		'Public\New-ExchangeSession.ps1',
+		'Public\Close-ExchangeSession',
 		'Public\New-RandomString.ps1',
 		'Public\New-StringEncryption.ps1',
 		'Public\New-StringDecryption.ps1',
