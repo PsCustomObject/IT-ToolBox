@@ -1,9 +1,5 @@
 # IT-ToolBox - Change History
 
-## Version 2.2.1.0 - 31.01.2020
-
-- **New** cmdlet *Convert-LogonTimestamp* to allow easy conversion of user *LastLoginTimeStamp* to human redeable format
-
 ## Version 2.2.0.0 - 05.12.2019
 
 - **New** cmdlet *New-ExchangeSession* to create a remote PowerShell session to an on-premise Exchange server [2](https://github.com/PsCustomObject/IT-ToolBox/issues/2)
