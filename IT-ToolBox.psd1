@@ -4,7 +4,7 @@
 	RootModule = 'IT-ToolBox.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '2.2.0.0'
+	ModuleVersion = '2.2.1.0'
 	
 	# ID used to uniquely identify this module
 	GUID = '02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08'
@@ -16,7 +16,7 @@
 	CompanyName = 'https://pscustomobject.github.io/'
 	
 	# Copyright statement for this module
-	Copyright = '(c) 2019. All rights reserved.'
+	Copyright = '(c) 2020. All rights reserved.'
 	
 	# Description of the functionality provided by this module
 	Description = 'Swiss Army Knife Module for any IT Professional'
@@ -109,7 +109,8 @@
 		'Public\Test-IsValidUpn.ps1',
     	'Public\New-Timer.ps1',
     	'Public\Stop-Timer.ps1',
-    	'Public\Get-ElapsedTime.ps1'
+        'Public\Get-ElapsedTime.ps1',
+        'Public\Convert-LogonTimestamp.ps1'
 	)
 	
 	# Private data to pass to the module specified in ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
