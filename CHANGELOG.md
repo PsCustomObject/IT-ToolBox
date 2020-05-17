@@ -1,5 +1,11 @@
 # IT-ToolBox - Change History
 
+## Version 2.2.2.0 - 17.05.2020
+
+- **Updated** cmdlet *New-LogEntry* to use latest [function version](https://github.com/PsCustomObject/New-LogEntry)
+- **Updated** cmdlet *New-StringConversion* to use latest function version including performance and reliability enhancements
+- **Updated** version of *WinSCPnet.dll* assembly file
+
 ## Version 2.2.1.0 - 31.01.2020
 
 - **New** cmdlet *Convert-LogonTimestamp* to allow easy conversion of user *LastLoginTimeStamp* to human redeable format

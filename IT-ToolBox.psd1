@@ -4,7 +4,7 @@
 	RootModule = 'IT-ToolBox.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '2.2.1.0'
+	ModuleVersion = '2.2.2.0'
 	
 	# ID used to uniquely identify this module
 	GUID = '02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08'
