@@ -1,5 +1,10 @@
 # IT-ToolBox - Change History
 
+## Version 2.2.3.1 - 09.08.2020
+
+- **Fixed** an issue in *Get-ReportChain* cmdlet causing the *-UserPrincipalName* parameter not to correctly retrieve identity from Active Directory
+- **Updated** *-UPN* parameter renamed to *-UserPrincipalName* for better discoverability
+
 ## Version 2.2.3.0 - 09.08.2020
 
 - **New** cmdlet *Get-ReportChain* to get a list of all *direct* and *indirect* reports for a specific manager

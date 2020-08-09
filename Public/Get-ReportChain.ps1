@@ -20,14 +20,14 @@
         .PARAMETER SamAccountName
             A string representing the SamAccountName of the mager for which reports should be enumerated.
         
-        .PARAMETER UPN
+        .PARAMETER UserPrincipalName
             A string representing the UserPrincipalName of the mager for which reports should be enumerated.
         
         .PARAMETER UserDN
             A string representing the UserPrincipalName of the mager for which reports should be enumerated.
         
         .PARAMETER DomainController
-            A strin representing the name of the domain controller that should be used to query Active Directory.
+            A string representing the name of the domain controller that should be used to query Active Directory.
             
             If parameter is not specified a random domain controller will be automatically used.
         
@@ -35,15 +35,14 @@
             An array object representing user properties that should be returned as part of the results.
             
             Result array will be ordered by the Properties parameter.
+    
+            If all objects should be returned the * character can be used with the parameter.
         
         .EXAMPLE
             PS C:\> Get-ReportChain -UserDN 'value1'
         
         .OUTPUTS
             System.Array
-        
-        .NOTES
-            Additional information about the function.
     #>
     
     [CmdletBinding(DefaultParameterSetName = 'DistinguishedName',
@@ -55,15 +54,18 @@
         [Parameter(ParameterSetName = 'SamAccountNAme',
                    Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('UserSam', 'SAM')]
         [string]
         $SamAccountName,
         [Parameter(ParameterSetName = 'UserPrincipalName',
                    Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('UPN', 'UserUPN')]
         [string]
-        $UPN,
+        $UserPrincipalName,
         [Parameter(ParameterSetName = 'DistinguishedName',
                    Mandatory = $true)]
+        [Alias('DN', 'DistinguishedName')]
         [string]
         $UserDN,
         [Parameter(ParameterSetName = 'DistinguishedName')]
@@ -103,16 +105,16 @@
             'UserPrincipalName'
             {
                 # Check if UPN is valid
-                if (!(Test-IsEmail -EmailAddress $UPN))
+                if (!(Test-IsEmail -EmailAddress $UserPrincipalName))
                 {
-                    Write-Warning -Message "$UPN is not a valid UPN"
+                    Write-Warning -Message "$UserPrincipalName is not a valid UPN"
                     
                     continue
                 }
                 else
                 {
                     # Append to command hash
-                    $paramGetUserDn.Add('Identity', $UPN)
+                    $paramGetUserDn.Add('Filter', "UserPrincipalName -eq '$UserPrincipalName'")
                 }
             }
             'DistinguishedName'
@@ -172,5 +174,3 @@
         return $reportChain
     }
 }
-
-Get-ReportChain -SamAccountName 'daniele.catanesi'
