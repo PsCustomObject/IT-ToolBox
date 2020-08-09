@@ -1,5 +1,10 @@
 # IT-ToolBox - Change History
 
+## Version 2.2.3.0 - 09.08.2020
+
+- **New** cmdlet *Get-ReportChain* to get a list of all *direct* and *indirect* reports for a specific manager
+- **New** cmdlet *Test-IsValidDN* to check if a string is a valid AD DistinguishedName
+
 ## Version 2.2.2.0 - 17.05.2020
 
 - **Updated** cmdlet *New-LogEntry* to use latest [function version](https://github.com/PsCustomObject/New-LogEntry)
@@ -8,7 +13,7 @@
 
 ## Version 2.2.1.0 - 31.01.2020
 
-- **New** cmdlet *Convert-LogonTimestamp* to allow easy conversion of user *LastLoginTimeStamp* to human redeable format
+- **New** cmdlet *Convert-LogonTimestamp* to allow easy conversion of user *LastLoginTimeStamp* to human readable format
 
 ## Version 2.2.0.0 - 05.12.2019
 
@@ -47,7 +52,7 @@
 - **New** cmdlet *Test-IsValidUpn* to validate string is a valid UPN
 - **New** cmdlet *Add-Encryption* to PGP encrypt a file (external dependencies required)
 - **New** cmdlet *Get-GnuPgPackage* to install *GnuPg Win* package for PGP encryption
-- **New** cmdlet *New-ScpUpload* to support upload fo files to remote SFTP Servers via WinSCP assembly
+- **New** cmdlet *New-ScpUpload* to support upload of files to remote SFTP Servers via WinSCP assembly
 - **New** cmdlet *New-ScpSession* to support sessions to remote SFTP Servers via WinSCP assembly 
 
 ## Version 2.0.0.0 - 13.06.2019
