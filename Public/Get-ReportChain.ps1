@@ -107,9 +107,7 @@
                 # Check if UPN is valid
                 if (!(Test-IsEmail -EmailAddress $UserPrincipalName))
                 {
-                    Write-Warning -Message "$UserPrincipalName is not a valid UPN"
-                    
-                    continue
+                    throw "$UserPrincipalName is not a valid UPN"                    
                 }
                 else
                 {
@@ -122,9 +120,7 @@
                 # Check if DN is in the correct format
                 if (!(Test-IsValidDN -ObjectDN $UserDN))
                 {
-                    Write-Warning -Message "$UserDN is not a valid object DN"
-                    
-                    continue
+                    throw "$UserDN is not a valid object DN"
                 }
                 else
                 {

@@ -1,5 +1,9 @@
 # IT-ToolBox - Change History
 
+## Version 2.2.3.2 - 11.08.2020
+
+- **Fixed** and issue in *Get-ReportChain* cmdlet causing identity processing to continue despite input data failing validation
+
 ## Version 2.2.3.1 - 09.08.2020
 
 - **Fixed** an issue in *Get-ReportChain* cmdlet causing the *-UserPrincipalName* parameter not to correctly retrieve identity from Active Directory
