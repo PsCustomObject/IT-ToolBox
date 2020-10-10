@@ -4,7 +4,7 @@
 	RootModule = 'IT-ToolBox.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '2.2.3.2'
+	ModuleVersion = '2.2.3.3'
 	
 	# ID used to uniquely identify this module
 	GUID = '02c0c748-00ba-4e8f-b8ce-6aa7e4cefe08'
@@ -112,7 +112,9 @@
         'Public\Get-ElapsedTime.ps1',
         'Public\Convert-LogonTimestamp.ps1',
         'Public\Test-IsValidDN.ps1',
-        'Public\Get-ReportChain.ps1'
+        'Public\Get-ReportChain.ps1',
+		'Public\Get-StringCheckSum',
+		'Public\Get-StringHashCode'
 	)
 	
 	# Private data to pass to the module specified in ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

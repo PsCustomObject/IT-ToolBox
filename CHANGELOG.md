@@ -1,5 +1,10 @@
 # IT-ToolBox - Change History
 
+## Version 2.2.3.3 - 10.10.2020
+
+- **New** cmdlet *Get-StringHashCode* to calculate hascode for a string
+- **New** cmdlet *Get-StringCheckSum* to calculate checksum for a string
+
 ## Version 2.2.3.2 - 11.08.2020
 
 - **Fixed** and issue in *Get-ReportChain* cmdlet causing identity processing to continue despite input data failing validation
