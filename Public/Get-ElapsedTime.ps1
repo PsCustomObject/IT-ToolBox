@@ -88,7 +88,7 @@ function Get-ElapsedTime
 		[switch]
 		$Minutes,
 		[Parameter(ParameterSetName = 'Seconds')]
-		[swith]
+		[switch]
 		$Seconds,
 		[Parameter(ParameterSetName = 'TotalDays')]
 		[switch]

@@ -1,0 +1,86 @@
+name: IT-ToolBox
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Public/**'
+      - 'Private/**'
+      - 'Tests/**'
+      - 'IT-ToolBox.psd1'
+      - 'IT-ToolBox.psm1'
+      - '.github/workflows/powershell.yml'
+  pull_request:
+    paths:
+      - 'Public/**'
+      - 'Private/**'
+      - 'Tests/**'
+      - 'IT-ToolBox.psd1'
+      - 'IT-ToolBox.psm1'
+      - '.github/workflows/powershell.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Pester (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Check runtime and script syntax
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSVersionTable
+          if ($PSVersionTable.PSVersion -lt [version]'7.4') {
+              throw 'PowerShell 7.4 or later is required.'
+          }
+          foreach ($file in Get-ChildItem ./Public, ./Private, ./Tests -Filter *.ps1 -Recurse) {
+              $tokens = $null
+              $parseErrors = $null
+              $null = [System.Management.Automation.Language.Parser]::ParseFile(
+                  $file.FullName, [ref]$tokens, [ref]$parseErrors
+              )
+              if ($parseErrors.Count -gt 0) {
+                  throw ($parseErrors | Out-String)
+              }
+          }
+
+      - name: Install Pester
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck -Repository PSGallery
+
+      - name: Smoke test loader
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Import-Module ./IT-ToolBox.psd1 -Force -ErrorAction Stop
+          $null = Get-Command New-LogEntry -CommandType Function -ErrorAction Stop
+          New-LogEntry -LogMessage 'CI smoke test' -BufferOnly
+          $entries = @(New-LogEntry -GetBuffer)
+          if ($entries.Count -ne 1 -or $entries[0] -notmatch '\[INFO\]: CI smoke test$') {
+              throw 'Loader smoke test failed.'
+          }
+          New-LogEntry -ClearBuffer
+
+      - name: Run Pester tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Import-Module Pester -RequiredVersion 5.7.1 -Force
+          $configuration = New-PesterConfiguration
+          $configuration.Run.Path = './Tests'
+          $configuration.Run.Exit = $true
+          $configuration.Output.Verbosity = 'Detailed'
+          Invoke-Pester -Configuration $configuration

@@ -1,28 +1,62 @@
-# IT-ToolBox PowerShell Modules
+# IT-ToolBox
 
-A PowerShell module designed to be the Swiss Army knife for SysAdmins and IT Operators including function raging from simple email format validation to encryption of files folders via GnuGPG.
+Reusable infrastructure automation utilities originally developed for Windows
+enterprise administration. Version 3 modernizes the module in small, tested steps.
 
-Module is still under development as new cmdlets are being added but all code has been tested and being used in production for automation purposes.
+## Status and requirements
 
-Complete history of development and changes can be found in the **[ChangeLog](https://github.com/PsCustomObject/IT-ToolBox/blob/master/CHANGELOG.md)**
+This is the **3.0.0-alpha1 foundation**, not the completed modernization release.
+Requires PowerShell 7.4 or later (Core edition). Windows PowerShell 5.1 is not supported.
+The foundation imports without WinSCP, GnuPG, Active Directory or Exchange dependencies.
 
-## Development and distribution
+## Supported commands in this foundation
 
-All code in the module is released under the *[MIT license](https://github.com/PsCustomObject/IT-ToolBox/blob/master/LICENSE)*  so you are free to download, modify and redistribute part or all of the module's code.
+| Command | Purpose |
+| --- | --- |
+| New-LogEntry | File and console logging, buffering, redaction and pipeline input |
+| New-Timer | Start a Stopwatch |
+| Get-TimerStatus | Check whether a Stopwatch is running |
+| Stop-Timer | Stop a Stopwatch |
+| Get-ElapsedTime | Retrieve elapsed time or individual components |
 
-## Documentation
+```powershell
+Import-Module ./IT-ToolBox.psd1
+New-LogEntry -LogMessage 'Started' -LogFilePath './automation.log' -NoConsole
+$timer = New-Timer
+Get-ElapsedTime -ElapsedTime $timer
+Stop-Timer -Timer $timer
+```
 
-Plan is to create a dedicated Wiki for the project but I'm also creating a list of posts on my **[website](https://PsCustomObject.github.io)** containing examples of the various functions making up the module. 
+Logging output only enters the success pipeline when requested with `-PassThru`.
+Use `New-LogEntry -GetBuffer`, `-FlushBuffer` and `-ClearBuffer` rather than accessing
+module variables. Redaction is opt-in and does not guarantee detection of every secret.
 
-This is a work in progress so if an article is missing feel free to leave a comment or create an issue in the issue board.
+## Migration from v2
 
-## Issue reporting
+- SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
+  will own file transfer and OpenPGP; no replacement is bundled here.
+- `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
+- `Staging/v3/` retains 20 candidate commands pending tests and compatibility fixes.
+  These include existing validators, strings, password generation, API requests,
+  registry, uptime and AD utilities. They are not currently exported.
+- Only the five listed commands are exported. Private helpers, variables and aliases
+  are not exported. Existing calls to other v2 commands require the v2 release until
+  those commands return to the supported API.
+- The module GUID and Git history are preserved.
 
-All code is thoroughly before being released and used in a production environment, *[eating my own dowg food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)*, so usually I notice bugs immediately and try to fix them as soon as possible while also creatinga an issue to keep track of the updates. 
+## Tests and CI
 
-Anyhow if you experience an issue, have a suggestion, idea for a new feature or enhancement for the code or performance please use **[Issue Board](https://github.com/PsCustomObject/IT-ToolBox/issues)** to submit a request so that I can analyze and act upon, of course PR are more than welcome!
+```powershell
+Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser
+Invoke-Pester ./Tests
+```
 
-----
-## Note on removed functions
+CI runs syntax validation, isolated import and Pester on Windows, Linux and macOS
+using each hosted runner's installed PowerShell. It does not test every PowerShell
+release. The inherited ten logger tests now exercise the command through module import.
+Concurrency stress tests and Windows/AD integration tests are future work.
 
-All SCP related functions are being removed from the module as those are being developed and integrated as part of as standalone module called **PowerSCP** which can be found [here](https://github.com/PsCustomObject/PowerScp)
+The logger is adopted from `PowerShell-Functions/New-LogEntry` at commit `d5a9edd`.
+The source and helper implementations are unchanged; integration tests import this module.
+
+See [CHANGELOG.md](./CHANGELOG.md) for history. Released under the [MIT License](./LICENSE).
