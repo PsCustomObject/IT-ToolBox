@@ -27,6 +27,7 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | New-RandomString | Secure random selection from the historical alphabet |
 | New-RandomPassword | Secure random passwords from the historical mixed alphabet |
 | New-PhoneticPassword | Passwords with phonetic spelling and exact category counts |
+| New-ApiRequest | OAuth-style form/JSON client requests |
 
 ```powershell
 Import-Module ./IT-ToolBox.psd1
@@ -45,10 +46,10 @@ module variables. Redaction is opt-in and does not guarantee detection of every 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 13 candidate commands pending tests and compatibility fixes.
+- `Staging/v3/` retains 12 candidate commands pending tests and compatibility fixes.
   These include existing validators, strings, password generation, API requests,
   registry, uptime and AD utilities. They are not currently exported.
-- Only the fourteen listed commands are exported. Private helpers, variables and aliases
+- Only the fifteen listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -149,3 +150,32 @@ as universal password policies.
 Lengths must be 1–4,096; composition counts must be nonnegative and total 1–4,096
 per pipeline input. Independent secure selection allows repeated characters, fixing
 the old random-password length cap caused by sampling without replacement.
+
+## API request helper
+
+`New-ApiRequest` constructs a client request with `client_id`, `grant_type` and
+optional `client_secret`, and returns the endpoint response. It is not a general
+REST client or an automatic token-acquisition/refresh workflow.
+
+```powershell
+$response = New-ApiRequest -ApiKey 'client-id' -ApiSecret $secret -ApiUrl 'https://example.invalid/oauth/token'
+$response = New-ApiRequest -ApiKey 'client-id' -ApiSecret $secret -ApiUrl 'https://example.invalid/token' -ContentType 'application/json' -Headers @{ 'X-Request-ID' = 'request-id' }
+```
+
+The default is POST with `application/x-www-form-urlencoded`. JSON content type
+serializes the same authentication fields as JSON. `Headers` must be an IDictionary
+(e.g. a hashtable); specify Content-Type with `-ContentType`, not inside Headers.
+Only form and JSON bodies are supported.
+
+Migration changes: GET no longer defaults, and a GET request cannot include
+`ApiSecret`. Secret-free GET remains available and delegates dictionary query
+encoding to Invoke-RestMethod. Requests with a client secret or Authorization
+header require HTTPS. Other custom headers are not inspected for secrets; callers
+should use HTTPS for sensitive requests. Automatic redirects are disabled; use
+the final endpoint explicitly. URLs must be absolute HTTP(S) without user-info.
+
+Connection timeout defaults to 30 seconds and can be configured with
+`-ConnectionTimeoutSeconds` (alias `-TimeoutSec`). This is not a guaranteed total
+wall-clock deadline. Failures terminate with the original Invoke-RestMethod error;
+no retries or custom logging are added. Tests mock all HTTP calls: real endpoint
+behavior and TLS are not integration-tested.

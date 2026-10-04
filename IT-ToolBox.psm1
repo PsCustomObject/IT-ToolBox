@@ -23,4 +23,5 @@ Export-ModuleMember -Function @(
         'New-RandomString'
         'New-RandomPassword'
         'New-PhoneticPassword'
+        'New-ApiRequest'
 )
