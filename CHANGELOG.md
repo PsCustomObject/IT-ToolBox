@@ -1,3 +1,16 @@
+## Authenticated string encryption (unreleased)
+
+- Restore New-StringEncryption/New-StringDecryption with AES-256-GCM and PBKDF2-HMAC-SHA256.
+- Require explicit passphrases, generate random salts/nonces, authenticate ciphertext.
+- Add a bounded versioned format and independent interoperability/tampering tests.
+- Preserve original legacy decoding code; document intentional ciphertext/API changes.
+
+## Validation restoration (unreleased)
+
+- Restore filename/path, IP and date validators with documented semantics and tests.
+- Correct filename character scanning; add Windows-compatible device-name checks.
+- Reject ambiguous IPv4 shorthand; allow explicit date culture and exact format.
+
 # 3.0.0-alpha1 (unreleased)
 
 - Establish a PowerShell 7.4 Core module foundation with five explicit exports.
