@@ -1,3 +1,12 @@
+## String utilities restoration (unreleased)
+
+- Restore character conversion, string checksums and SHA-256 hashing.
+- Preserve the character map while fixing index leakage and default space handling.
+- Copy custom maps; normalize text and process Unicode text elements.
+- Retain historical MD5 checksum formatting and allow stronger digest selection.
+- Default SHA-256 output to hexadecimal; expose LegacyFormat for old comparisons.
+- Add behavioral and known-vector tests.
+
 ## API request restoration (unreleased)
 
 - Restore New-ApiRequest with independent optional-parameter handling.

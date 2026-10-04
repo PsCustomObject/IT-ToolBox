@@ -10,7 +10,7 @@ Describe 'IT-ToolBox module boundary' {
     }
 
     It 'exports exactly the supported commands' {
-        $expected = @('New-LogEntry', 'New-Timer', 'Get-TimerStatus', 'Stop-Timer', 'Get-ElapsedTime', 'Test-FileName', 'Test-IsValidPath', 'Test-IsIP', 'Test-IsDate', 'New-StringEncryption', 'New-StringDecryption', 'New-RandomString', 'New-RandomPassword', 'New-PhoneticPassword', 'New-ApiRequest') | Sort-Object
+        $expected = @('New-LogEntry', 'New-Timer', 'Get-TimerStatus', 'Stop-Timer', 'Get-ElapsedTime', 'Test-FileName', 'Test-IsValidPath', 'Test-IsIP', 'Test-IsDate', 'New-StringEncryption', 'New-StringDecryption', 'New-RandomString', 'New-RandomPassword', 'New-PhoneticPassword', 'New-ApiRequest', 'New-StringConversion', 'Get-StringCheckSum', 'Get-StringHashCode') | Sort-Object
         $actual = @($module.ExportedFunctions.Keys | Sort-Object)
         ($actual -join ',') | Should -Be ($expected -join ',')
         $module.ExportedVariables.Count | Should -Be 0

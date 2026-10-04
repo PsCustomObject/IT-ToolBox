@@ -28,6 +28,9 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | New-RandomPassword | Secure random passwords from the historical mixed alphabet |
 | New-PhoneticPassword | Passwords with phonetic spelling and exact category counts |
 | New-ApiRequest | OAuth-style form/JSON client requests |
+| New-StringConversion | Domain-specific character mapping and space handling |
+| Get-StringCheckSum | UTF-8 checksums with selectable digest algorithms |
+| Get-StringHashCode | Standard SHA-256 hex with explicit legacy output mode |
 
 ```powershell
 Import-Module ./IT-ToolBox.psd1
@@ -46,10 +49,10 @@ module variables. Redaction is opt-in and does not guarantee detection of every 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 12 candidate commands pending tests and compatibility fixes.
+- `Staging/v3/` retains 9 candidate commands pending tests and compatibility fixes.
   These include existing validators, strings, password generation, API requests,
   registry, uptime and AD utilities. They are not currently exported.
-- Only the fifteen listed commands are exported. Private helpers, variables and aliases
+- Only the eighteen listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -179,3 +182,27 @@ Connection timeout defaults to 30 seconds and can be configured with
 wall-clock deadline. Failures terminate with the original Invoke-RestMethod error;
 no retries or custom logging are added. Tests mock all HTTP calls: real endpoint
 behavior and TLS are not integration-tested.
+
+## String conversion and hashing
+
+`New-StringConversion` retains the original character map, custom-map parameter,
+unknown-character replacement and space options. Its default now matches the
+documented behavior: spaces become hyphens. It returns exactly one string rather
+than leaking collection indices. The map remains domain-specific (for example,
+`&` maps to `e`); it is not a general-purpose transliteration or safe-path generator.
+
+Custom maps replace the default map and are copied internally. Space policy
+overrides an existing space mapping without mutating the caller's table. Conversion
+normalizes text to Form C and handles unsupported Unicode text elements once,
+including supplementary characters. This changes output for decomposed accents
+and surrogate pairs compared with the old UTF-16 character loop.
+
+`Get-StringCheckSum` retains uppercase hyphen-separated MD5 output by default for
+existing non-security comparisons. Select `-Algorithm SHA256`, `SHA384` or `SHA512`
+when needed. MD5 is unsuitable for adversarial integrity checks.
+
+`Get-StringHashCode` returns 64 uppercase SHA-256 hexadecimal characters by default.
+Use `-LegacyFormat` only when comparing with old delimiter-free decimal output.
+The hash algorithm remains SHA-256; the default representation intentionally changes.
+Both hash commands use UTF-8 without a BOM and do not normalize text. Neither is
+a password-storage function or an authentication mechanism.
