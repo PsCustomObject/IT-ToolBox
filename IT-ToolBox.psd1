@@ -14,6 +14,12 @@
         'Get-TimerStatus'
         'Stop-Timer'
         'Get-ElapsedTime'
+        'Test-FileName'
+        'Test-IsValidPath'
+        'Test-IsIP'
+        'Test-IsDate'
+        'New-StringEncryption'
+        'New-StringDecryption'
     )
     CmdletsToExport = @()
     VariablesToExport = @()
