@@ -1,3 +1,13 @@
+# 3.0.0-alpha1 (unreleased)
+
+- Establish a PowerShell 7.4 Core module foundation with five explicit exports.
+- Adopt the tested New-LogEntry implementation and private helpers.
+- Add module boundary, timer and inherited logger tests with cross-platform CI.
+- Fix the Get-ElapsedTime Seconds parameter type typo.
+- Remove SCP/GnuPG functions and bundled WinSCP binaries.
+- Retain other candidate utilities in Staging/v3 and historical helpers in Legacy.
+- Remove obsolete CLR/.NET Framework constraints and stale FileList entries.
+
 # IT-ToolBox - Change History
 
 ## Version 2.2.3.3 - 10.10.2020

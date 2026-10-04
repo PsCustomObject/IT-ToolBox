@@ -1,269 +1,312 @@
 function New-LogEntry
 {
     <#
-	.SYNOPSIS
-		Function serves as logging framework for PowerShell scripts.
-	
-	.DESCRIPTION
-		Function allows writing log messages to a log file that can be located locally or an UNC Path additionally using buffers is supported
-		to allow loggin in situations where PsProvider does not allow access to the local system for example when working with SCCM cmdlets.
-		
-		By default all log messages are prepended with the [INFO] tag, see -IsError or -IsWarning parameters for more details on additional tags,
-		unless the -NoTag parameter is specified.
-	
-	.PARAMETER LogMessage
-		A string representing the message to be written to the lot stream.
-	
-	.PARAMETER LogFilePath
-		A string representing the path and file name to be used for writing log messages.
-		
-		If parameter is not specified $PSCommandPath will be used.
-	
-	.PARAMETER IsErrorMessage
-		When parameter is specified log message will be prepended with the [Error] tag additionally Write-Error will be used to print
-		error on console.
-	
-	.PARAMETER IsWarningMessage
-		When parameter is specified log message will be prepended with the [Warning] tag additionally Write-Warning will be used to print
-		error on console.
-	
-	.PARAMETER BufferOnlyInfo
-		When parameter is specified log message will be saved to a temporary log-buffer with script scope for later retrieval.
-	
-	.PARAMETER NoConsole
-		When parameter is specified console output will be suppressed.
-	
-	.PARAMETER BufferOnlyWarning
-		When parameter is specified log message will be saved to a temporary log-buffer with script scope for later retrieval and
-		message will be repended with the [Warning] tag
-	
-	.PARAMETER BufferOnlyError
-		When parameter is specified log message will be saved to a temporary log-buffer with script scope for later retrieval and
-		message will be repended with the [Error] tag
-	
-	.PARAMETER BufferOnly
-		When parameter is specified log message will only be written to a temporary buffer that can be forwarded to file or printed on screen.
-	
-	.PARAMETER NoTag
-		When parameter is specified tag representing message severity will be not be part of the log message.
-	
-	.EXAMPLE
-		PS C:\> New-LogEntry -LogMessage 'This is a test message' -LogFilePath  'C:\Temp\TestLog.log'
-		
-		[02.29.2020 08:27:01 AM] - [INFO]: This is a test message
-#>
-    
-    [CmdletBinding(DefaultParameterSetName = 'Info')]
-    [OutputType([string], ParameterSetName = 'Info')]
-    [OutputType([string], ParameterSetName = 'Error')]
-    [OutputType([string], ParameterSetName = 'Warning')]
-    [OutputType([string], ParameterSetName = 'NoConsole')]
-    [OutputType([string], ParameterSetName = 'BufferOnly')]
+    .SYNOPSIS
+        Writes PowerShell automation log entries to a file, console, or in-memory buffer.
+
+    .DESCRIPTION
+        New-LogEntry writes timestamped log entries with INFO, WARNING, or ERROR tags.
+        File writes are protected by a named system mutex so concurrent PowerShell processes
+        do not interleave or lose log lines. The mutex name is derived from the log file path,
+        which keeps unrelated log files from blocking each other.
+
+        Buffered entries are retained in the function's script scope and can be retrieved,
+        flushed to disk, or cleared with -GetBuffer, -FlushBuffer, and -ClearBuffer. This works
+        when the function is dot-sourced into a script or loaded from a module because callers
+        do not need direct access to the backing variable.
+
+    .PARAMETER LogMessage
+        Message text to write. Multiline messages are split so every physical log line receives
+        its own timestamp and severity prefix.
+
+    .PARAMETER LogFilePath
+        Path to the log file. If omitted, a log file is created beside the running script when
+        possible, or in the current directory when running interactively.
+
+    .PARAMETER Level
+        Severity level for the entry. Defaults to INFO.
+
+    .PARAMETER IsErrorMessage
+        Compatibility switch for older callers. Sets -Level to ERROR.
+
+    .PARAMETER IsWarningMessage
+        Compatibility switch for older callers. Sets -Level to WARNING.
+
+    .PARAMETER BufferOnly
+        Adds the entry to the in-memory buffer without writing it to file or console.
+
+    .PARAMETER BufferOnlyInfo
+        Adds the entry to the buffer as INFO. This is retained for compatibility; -BufferOnly
+        alone also uses INFO.
+
+    .PARAMETER BufferOnlyWarning
+        Adds the entry to the buffer as WARNING.
+
+    .PARAMETER BufferOnlyError
+        Adds the entry to the buffer as ERROR.
+
+    .PARAMETER GetBuffer
+        Returns buffered log entries without clearing them.
+
+    .PARAMETER FlushBuffer
+        Writes buffered entries to the log file and clears the buffer after a successful write.
+
+    .PARAMETER ClearBuffer
+        Clears buffered entries without writing them.
+
+    .PARAMETER NoConsole
+        Suppresses console output for non-buffered writes and buffer flushes.
+
+    .PARAMETER PassThru
+        Returns formatted log lines on the success output stream. INFO console output is written
+        with Write-Host by default so logs do not pollute pipeline output unless -PassThru is used.
+
+    .PARAMETER LockTimeoutSeconds
+        Maximum number of seconds to wait for the log file mutex before failing. Defaults to 30.
+
+    .PARAMETER RedactSecrets
+        Applies built-in redaction patterns for common secrets such as bearer tokens, password
+        assignments, API keys, and Authorization headers before formatting or writing the message.
+
+    .PARAMETER RedactPattern
+        Additional regular expression patterns to redact before formatting or writing the message.
+
+    .PARAMETER RedactionText
+        Replacement text used for redacted content. Defaults to [REDACTED].
+
+    .PARAMETER NoTag
+        Omits the severity tag from the formatted entry.
+
+    .EXAMPLE
+        New-LogEntry -LogMessage 'This is a test message' -LogFilePath '/tmp/TestLog.log'
+
+    .EXAMPLE
+        New-LogEntry -LogMessage 'Start' -BufferOnly
+        New-LogEntry -LogMessage 'End' -BufferOnly
+        New-LogEntry -GetBuffer
+        New-LogEntry -FlushBuffer -LogFilePath '/tmp/TestLog.log'
+    #>
+
+    [CmdletBinding(DefaultParameterSetName = 'Write')]
     param
     (
-        [Parameter(ParameterSetName = 'Error')]
-        [Parameter(ParameterSetName = 'Info')]
-        [Parameter(ParameterSetName = 'NoConsole')]
-        [Parameter(ParameterSetName = 'Warning',
-                   Mandatory = $true)]
-        [Parameter(ParameterSetName = 'BufferOnly')]
+        [Parameter(ParameterSetName = 'Write', Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(ParameterSetName = 'BufferOnly', Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]
         [Alias('Log', 'Message')]
-        [string]
-        $LogMessage,
-        [Parameter(ParameterSetName = 'Error',
-                   Mandatory = $false)]
-        [Parameter(ParameterSetName = 'Info')]
-        [Parameter(ParameterSetName = 'Warning')]
+        [string]$LogMessage,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'FlushBuffer')]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $LogFilePath,
-        [Parameter(ParameterSetName = 'Error')]
+        [string]$LogFilePath,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'BufferOnly')]
+        [ValidateSet('INFO', 'WARNING', 'ERROR')]
+        [string]$Level = 'INFO',
+
+        [Parameter(ParameterSetName = 'Write')]
         [Alias('IsError', 'WriteError')]
-        [switch]
-        $IsErrorMessage,
-        [Parameter(ParameterSetName = 'Warning')]
+        [switch]$IsErrorMessage,
+
+        [Parameter(ParameterSetName = 'Write')]
         [Alias('Warning', 'IsWarning', 'WriteWarning')]
-        [switch]
-        $IsWarningMessage,
+        [switch]$IsWarningMessage,
+
         [Parameter(ParameterSetName = 'BufferOnly')]
-        [switch]
-        $BufferOnlyInfo,
-        [Parameter(ParameterSetName = 'Error')]
-        [Parameter(ParameterSetName = 'Info')]
-        [Parameter(ParameterSetName = 'Warning')]
-        [Parameter(ParameterSetName = 'NoConsole')]
-        [switch]
-        $NoConsole,
+        [switch]$BufferOnlyInfo,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'FlushBuffer')]
+        [switch]$NoConsole,
+
         [Parameter(ParameterSetName = 'BufferOnly')]
-        [switch]
-        $BufferOnlyWarning,
+        [switch]$BufferOnlyWarning,
+
         [Parameter(ParameterSetName = 'BufferOnly')]
-        [switch]
-        $BufferOnlyError,
+        [switch]$BufferOnlyError,
+
         [Parameter(ParameterSetName = 'BufferOnly')]
-        [switch]
-        $BufferOnly,
-        [Parameter(ParameterSetName = 'Error')]
-        [Parameter(ParameterSetName = 'Info')]
-        [Parameter(ParameterSetName = 'NoConsole')]
-        [Parameter(ParameterSetName = 'Warning')]
+        [switch]$BufferOnly,
+
+        [Parameter(ParameterSetName = 'GetBuffer', Mandatory = $true)]
+        [switch]$GetBuffer,
+
+        [Parameter(ParameterSetName = 'FlushBuffer', Mandatory = $true)]
+        [switch]$FlushBuffer,
+
+        [Parameter(ParameterSetName = 'ClearBuffer', Mandatory = $true)]
+        [switch]$ClearBuffer,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'FlushBuffer')]
+        [switch]$PassThru,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'FlushBuffer')]
+        [ValidateRange(1, 86400)]
+        [int]$LockTimeoutSeconds = 30,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'BufferOnly')]
+        [switch]$RedactSecrets,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'BufferOnly')]
+        [ValidateNotNull()]
+        [string[]]$RedactPattern,
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'BufferOnly')]
+        [ValidateNotNull()]
+        [string]$RedactionText = '[REDACTED]',
+
+        [Parameter(ParameterSetName = 'Write')]
+        [Parameter(ParameterSetName = 'BufferOnly')]
         [Alias('SuppressTag')]
-        [switch]
-        $NoTag
+        [switch]$NoTag
     )
-    
+
     begin
     {
-        # Instantiate new mutex to implement lock
-        [System.Threading.Mutex]$logMutex = New-Object System.Threading.Mutex($false, 'LogSemaphore')
-        
-        # Check if file locked
-        [void]$logMutex.WaitOne()
-        
-        # Get current date timestamp
-        [string]$currentDate = [System.DateTime]::Now.ToString('[MM/dd/yyyy hh:mm:ss tt]')
-        
-        # Use script path if no filepath is specified
-        if ([string]::IsNullOrEmpty($LogFilePath) -eq $true)
+        $pendingEntries = [System.Collections.Generic.List[string]]::new()
+        $activeRedactPatterns = [System.Collections.Generic.List[string]]::new()
+
+        if ($IsWarningMessage -and $IsErrorMessage)
         {
-            # Generate log file path and name
-            $LogFilePath = '{0}{1}{2}{3}' -f $PSCommandPath, '-LogFile-', $currentDate, '.log'
+            throw 'Use either -IsWarningMessage or -IsErrorMessage, not both.'
+        }
+
+        if ($PSBoundParameters.ContainsKey('Level') -and ($IsWarningMessage -or $IsErrorMessage -or $BufferOnlyWarning -or $BufferOnlyError -or $BufferOnlyInfo))
+        {
+            throw 'Use either -Level or a compatibility severity switch, not both.'
+        }
+
+        if ($IsWarningMessage)
+        {
+            $Level = 'WARNING'
+        }
+        elseif ($IsErrorMessage)
+        {
+            $Level = 'ERROR'
+        }
+        elseif ($BufferOnlyWarning)
+        {
+            $Level = 'WARNING'
+        }
+        elseif ($BufferOnlyError)
+        {
+            $Level = 'ERROR'
+        }
+
+        if ($RedactSecrets)
+        {
+            $activeRedactPatterns.Add('(?i)\bbearer\s+[a-z0-9._~+/=-]+')
+            $activeRedactPatterns.Add('(?i)\b(password|passwd|pwd|secret|token|apikey|api_key|client_secret)\b\s*[:=]\s*("[^"]*"|''[^'']*''|\S+)')
+            $activeRedactPatterns.Add('(?i)\bauthorization\s*:\s*(basic|digest|ntlm|negotiate)\s+\S+')
+        }
+
+        if ($RedactPattern)
+        {
+            foreach ($pattern in $RedactPattern)
+            {
+                $activeRedactPatterns.Add($pattern)
+            }
         }
     }
-    
+
     process
     {
-        # Initialize commandsplat 
-        $paramOutFile = @{
-            LiteralPath = $LogFilePath
-            Append      = $true
-            Encoding    = 'utf8'
-        }
-        
-        switch ($PsCmdlet.ParameterSetName)
+        switch ($PSCmdlet.ParameterSetName)
         {
-            'Info'
+            'GetBuffer'
             {
-                switch ($PSBoundParameters.Keys)
-                {
-                    'NoTag'
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - : {1}' -f $currentDate, $LogMessage
-                        
-                        break
-                    }
-                    default
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - [INFO]: {1}' -f $currentDate, $LogMessage
-                    }
-                }
-                
-                # Append to log
-                $paramOutFile.Add('InputObject', $tmpLogMessage)
-                
-                # Suppress console output
-                if (!($NoConsole))
-                {
-                    Write-Output -InputObject $tmpLogMessage
-                }
-                
-                Out-File @paramOutFile
-                
-                break
+                Get-NewLogEntryBuffer
+                return
             }
-            'Warning'
+
+            'ClearBuffer'
             {
-                switch ($PSBoundParameters.Keys)
-                {
-                    'NoTag'
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - : {1}' -f $currentDate, $LogMessage
-                        
-                        break
-                    }
-                    default
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - [WARNING]:  {1}' -f $currentDate, $LogMessage
-                    }
-                }
-                
-                # Append to log
-                $paramOutFile.Add('InputObject', $tmpLogMessage)
-                
-                # Suppress console output
-                if (!($NoConsole))
-                {
-                    Write-Warning -Message $tmpLogMessage
-                }
-                
-                Out-File @paramOutFile
-                
-                break
+                Clear-NewLogEntryBuffer
+                return
             }
-            'Error'
+
+            'FlushBuffer'
             {
-                
-                switch ($PSBoundParameters.Keys)
+                $bufferedLines = Get-NewLogEntryBuffer
+
+                if ($bufferedLines.Count -eq 0)
                 {
-                    'NoTag'
+                    return
+                }
+
+                Write-NewLogEntryLines -Lines $bufferedLines -Path $LogFilePath -LockTimeoutSeconds $LockTimeoutSeconds
+
+                if (-not $NoConsole)
+                {
+                    foreach ($line in $bufferedLines)
                     {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - : {1}' -f $currentDate, $LogMessage
-                        
-                        break
-                    }
-                    default
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - [ERROR]: {1}' -f $currentDate, $LogMessage
+                        Write-Host $line
                     }
                 }
-                
-                # Append to log
-                $paramOutFile.Add('InputObject', $tmpLogMessage)
-                
-                # Suppress console output
-                if (!($NoConsole))
+
+                Clear-NewLogEntryBuffer
+
+                if ($PassThru)
                 {
-                    Write-Error -Message $tmpLogMessage
+                    $bufferedLines
                 }
-                
-                Out-File @paramOutFile
-                
-                break
+
+                return
             }
-            
-            'BufferOnly' {
-                
-                switch ($PSBoundParameters.Keys)
-                {
-                    'BufferOnlyWarning'
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - [WARNING]: {1}' -f $currentDate, $LogMessage
-                    }
-                    'BufferOnlyError'
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - [ERROR]: {1}' -f $currentDate, $LogMessage
-                    }
-                    default
-                    {
-                        # Format log message
-                        [string]$tmpLogMessage = '{0} - [INFO]: {1}' -f $currentDate, $LogMessage
-                    }
-                }
-                
-                # Format message for buffer
-                [string]$script:messageBuffer += $tmpLogMessage + [Environment]::NewLine
-                
-                break
+        }
+
+        $messageToLog = if ($activeRedactPatterns.Count -gt 0)
+        {
+            ConvertTo-NewLogEntryRedactedMessage -Message $LogMessage -Pattern $activeRedactPatterns.ToArray() -Replacement $RedactionText
+        }
+        else
+        {
+            $LogMessage
+        }
+
+        $entries = @(Format-NewLogEntry -Message $messageToLog -Level $Level -SuppressTag:$NoTag)
+
+        foreach ($entry in $entries)
+        {
+            $pendingEntries.Add($entry)
+        }
+    }
+
+    end
+    {
+        if ($pendingEntries.Count -eq 0)
+        {
+            return
+        }
+
+        $entries = $pendingEntries.ToArray()
+
+        if ($PSCmdlet.ParameterSetName -eq 'BufferOnly')
+        {
+            Add-NewLogEntryBuffer -Lines $entries
+            return
+        }
+
+        Write-NewLogEntryLines -Lines $entries -Path $LogFilePath -LockTimeoutSeconds $LockTimeoutSeconds
+
+        if (-not $NoConsole)
+        {
+            foreach ($entry in $entries)
+            {
+                Write-NewLogEntryConsole -Line $entry -Level $Level
             }
+        }
+
+        if ($PassThru)
+        {
+            $entries
         }
     }
 }
