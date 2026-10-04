@@ -1,3 +1,12 @@
+## Password-generation restoration (unreleased)
+
+- Restore New-RandomString, New-RandomPassword and New-PhoneticPassword.
+- Use secure unbiased integer selection and Fisher-Yates composition shuffling.
+- Preserve the phonetic alphabet, labels, counts, aliases and display options.
+- Use Set-Clipboard for PowerShell 7; honor WhatIf/Confirm for clipboard writes.
+- Validate lengths/counts and remove the old random-password alphabet-length cap.
+- Add behavioral tests with mocked console and clipboard operations.
+
 ## Authenticated string encryption (unreleased)
 
 - Restore New-StringEncryption/New-StringDecryption with AES-256-GCM and PBKDF2-HMAC-SHA256.

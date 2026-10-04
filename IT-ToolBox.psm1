@@ -20,4 +20,7 @@ Export-ModuleMember -Function @(
         'Test-IsDate'
         'New-StringEncryption'
         'New-StringDecryption'
+        'New-RandomString'
+        'New-RandomPassword'
+        'New-PhoneticPassword'
 )

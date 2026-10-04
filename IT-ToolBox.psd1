@@ -20,6 +20,9 @@
         'Test-IsDate'
         'New-StringEncryption'
         'New-StringDecryption'
+        'New-RandomString'
+        'New-RandomPassword'
+        'New-PhoneticPassword'
     )
     CmdletsToExport = @()
     VariablesToExport = @()

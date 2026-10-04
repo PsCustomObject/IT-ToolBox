@@ -24,6 +24,9 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | Test-IsDate | Culture-aware date validation with optional exact format |
 | New-StringEncryption | Passphrase-based AES-256-GCM string encryption |
 | New-StringDecryption | Authenticate and decrypt the versioned string format |
+| New-RandomString | Secure random selection from the historical alphabet |
+| New-RandomPassword | Secure random passwords from the historical mixed alphabet |
+| New-PhoneticPassword | Passwords with phonetic spelling and exact category counts |
 
 ```powershell
 Import-Module ./IT-ToolBox.psd1
@@ -42,10 +45,10 @@ module variables. Redaction is opt-in and does not guarantee detection of every 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 16 candidate commands pending tests and compatibility fixes.
+- `Staging/v3/` retains 13 candidate commands pending tests and compatibility fixes.
   These include existing validators, strings, password generation, API requests,
   registry, uptime and AD utilities. They are not currently exported.
-- Only the eleven listed commands are exported. Private helpers, variables and aliases
+- Only the fourteen listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -117,3 +120,32 @@ Implementation references: [.NET AES-GCM](https://learn.microsoft.com/en-us/dotn
 and [PBKDF2 work-factor guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).
 The PBKDF2 work factor is adopted from OWASP guidance; it is not a security audit
 or a guarantee that every deployment meets a compliance standard.
+
+## Password generation
+
+`New-PhoneticPassword` retains its 12-character default, phonetic character table,
+category-count parameters, aliases, color/display switches, clipboard option and
+string return value. The original symbol exclusions and phonetic spellings are
+unchanged. Numeric pipeline inputs accumulate into one returned password, as before.
+
+```powershell
+New-PhoneticPassword -LowerCaseLetters 6 -CapitalCaseLetters 4 -NumberDigits 4 -Symbol 4
+New-PhoneticPassword -PasswordLength 20 -NoPasswordSpell
+New-PhoneticPassword -PasswordToClipboard -NoPasswordSpell
+```
+
+Characters are selected using .NET `RandomNumberGenerator.GetInt32`; composition
+mode uses a Fisher-Yates shuffle. Clipboard writes use `Set-Clipboard` and honor
+`-WhatIf`/`-Confirm`; an available platform clipboard backend is required. An
+explicit clipboard failure throws rather than claiming a successful copy. CI mocks
+clipboard writes and does not verify a desktop clipboard backend.
+
+`New-RandomString` retains its alphabet and default length 12. `New-RandomPassword`
+retains its alphabet and default length 8. Its historical `-Complex` switch remains
+accepted with the same behavior; exact category guarantees are provided by
+`New-PhoneticPassword`. Defaults are preserved for compatibility, not recommended
+as universal password policies.
+
+Lengths must be 1–4,096; composition counts must be nonnegative and total 1–4,096
+per pipeline input. Independent secure selection allows repeated characters, fixing
+the old random-password length cap caused by sampling without replacement.
