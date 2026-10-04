@@ -1,3 +1,11 @@
+## API request restoration (unreleased)
+
+- Restore New-ApiRequest with independent optional-parameter handling.
+- Accept header dictionaries; correctly serialize JSON or form authentication fields.
+- Default to POST and reject secrets in GET queries or unencrypted requests.
+- Disable automatic redirects and expose a connection timeout.
+- Propagate request failures; add mocked tests with no network or credentials.
+
 ## Password-generation restoration (unreleased)
 
 - Restore New-RandomString, New-RandomPassword and New-PhoneticPassword.

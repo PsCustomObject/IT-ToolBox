@@ -23,6 +23,7 @@
         'New-RandomString'
         'New-RandomPassword'
         'New-PhoneticPassword'
+        'New-ApiRequest'
     )
     CmdletsToExport = @()
     VariablesToExport = @()
