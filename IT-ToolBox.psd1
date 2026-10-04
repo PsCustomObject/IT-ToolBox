@@ -24,6 +24,9 @@
         'New-RandomPassword'
         'New-PhoneticPassword'
         'New-ApiRequest'
+        'New-StringConversion'
+        'Get-StringCheckSum'
+        'Get-StringHashCode'
     )
     CmdletsToExport = @()
     VariablesToExport = @()
