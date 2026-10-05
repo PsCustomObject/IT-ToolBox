@@ -26,6 +26,6 @@ if (-not ([System.Management.Automation.PSTypeName]'ServerCertificateValidationC
         }
     }
 "@
-    
+
     Add-Type $certCallback
 }
