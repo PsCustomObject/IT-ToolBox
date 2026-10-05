@@ -7,9 +7,53 @@ enterprise administration. Version 3 modernizes the module in small, tested step
 
 This is the **3.0.0-alpha1 modernization preview**, not the completed modernization release.
 Requires PowerShell 7.4 or later (Core edition). Windows PowerShell 5.1 is not supported.
-The foundation imports without WinSCP, GnuPG, Active Directory or Exchange dependencies.
+The module imports without WinSCP, GnuPG, Active Directory or Exchange dependencies.
 
-## Supported commands in this foundation
+## Quick start from a clone
+
+Clone the repository with Git; no ZIP or build step is required:
+
+```bash
+git clone https://github.com/PsCustomObject/IT-ToolBox.git
+cd IT-ToolBox
+pwsh
+```
+
+Then run these commands in PowerShell from the repository root:
+
+```powershell
+Import-Module ./IT-ToolBox.psd1 -ErrorAction Stop
+Get-Command -Module IT-ToolBox
+Get-Help New-LogEntry -Full
+Test-IsEmail 'person@example.com'
+New-PhoneticPassword -PasswordLength 16 -NoPasswordSpell
+```
+
+This imports the local manifest; it does not install the module globally. Import it
+again in each new PowerShell session, using an absolute path when running elsewhere.
+The master branch contains ongoing preview development. Record the commit used by
+your automation with `git rev-parse HEAD`; updating your clone can change behavior.
+
+To update an existing clone, first commit or otherwise preserve local changes, then:
+
+```bash
+git switch master
+git pull --ff-only
+```
+
+Reload the updated module in PowerShell with
+`Import-Module ./IT-ToolBox.psd1 -Force -ErrorAction Stop`.
+
+Most utilities run on Windows, Linux and macOS. `Test-RegistryValue` is Windows-only;
+remote `Get-OsUpTime` needs Windows CIM cmdlets and a reachable Windows endpoint.
+`Get-ReportChain` needs an available `Get-ADUser` command and access to AD when invoked.
+Clipboard output requires a working platform clipboard backend.
+
+For compatibility details, see [migration from v2](#migration-from-v2), the command
+sections below and [integration ownership](./docs/Integrations.md).
+For development, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## Supported commands
 
 | Command | Purpose |
 | --- | --- |
@@ -68,12 +112,15 @@ Redaction is opt-in and does not guarantee detection of every secret.
 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
-- `Legacy/` retains historical string encryption helpers for migration reference.
+- `Legacy/` retains only the historical string encryption/decryption pair for
+  migration of existing ciphertext in a separate session.
 - All commands formerly retained in `Staging/v3/` now have supported implementations.
-  Its README records the migration; historical service integrations remain excluded.
+  Its README records the migration. Exchange/AzureAD session wrappers and the global
+  certificate-validation bypass have been removed; their source remains in Git history.
 - Only the twenty-nine listed commands are exported. Private helpers, variables and aliases
-  are not exported. Existing calls to other v2 commands require the v2 release until
-  those commands return to the supported API.
+  are not exported. Do not treat v3 as a drop-in replacement for every v2 script:
+  removed commands and documented parameter, output and encryption changes require
+  migration. No restoration of removed service wrappers is promised.
 - The module GUID and Git history are preserved.
 
 ## Tests and CI
@@ -91,9 +138,10 @@ Invoke-Pester ./Tests
 
 CI runs syntax validation, isolated import and Pester on Windows, Linux and macOS
 using each hosted runner's installed PowerShell. It does not test every PowerShell
-release. Logger tests exercise module import, redaction, failed-write retention, default paths,
-and simultaneous direct/buffered file writes from three processes. Temporary HKCU registry tests run on Windows. Live AD, remote CIM and service
-authentication integration tests are future work.
+release. Logger tests exercise module import, redaction, failed-write retention,
+default paths and simultaneous direct/buffered file writes from three processes.
+Temporary HKCU registry tests run on Windows and are skipped on Linux/macOS.
+Live AD, remote CIM and service authentication have not been integration-tested.
 
 The logger is adopted from `PowerShell-Functions/New-LogEntry` at commit `d5a9edd`.
 The integrated logger includes the maintenance fixes described in CHANGELOG.md.
@@ -418,3 +466,10 @@ removed. Import regression tests verify that loading and reloading IT-ToolBox le
 TLS callbacks, service sessions and caller preferences alone, and excludes archived
 and staged code. See [the integration review](./docs/Integrations.md) for defects,
 service-specific migration directions and requirements for future wrappers.
+
+## Feedback and contributions
+
+Report reproducible bugs through [GitHub Issues](https://github.com/PsCustomObject/IT-ToolBox/issues).
+Include the command, expected and actual behavior, operating system, PowerShell
+version and repository commit. Remove credentials and private data from examples.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the branch and test workflow.

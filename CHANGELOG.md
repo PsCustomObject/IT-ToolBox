@@ -1,3 +1,9 @@
+## Preview documentation refresh (unreleased)
+
+- Document cloning, local import, updates, command help and platform requirements.
+- Clarify v2 migration boundaries and supported preview commands.
+- Add contributing instructions for feature branches, four-space style and CI.
+
 ## Supported module packaging (unreleased)
 
 - Add a local ZIP builder with conventional IT-ToolBox/version module layout.
