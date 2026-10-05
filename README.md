@@ -42,7 +42,16 @@ Stop-Timer -Timer $timer
 
 Logging output only enters the success pipeline when requested with `-PassThru`.
 Use `New-LogEntry -GetBuffer`, `-FlushBuffer` and `-ClearBuffer` rather than accessing
-module variables. Redaction is opt-in and does not guarantee detection of every secret.
+module variables. A successful flush removes only the written entries; a failed file write
+retains the buffer for retry. Buffer operations are serialized during a flush.
+A partially completed filesystem write may still leave content on disk, so retrying after
+an I/O failure does not provide an exactly-once delivery guarantee.
+
+Without `-LogFilePath`, logs are created beside the calling script, or in the current
+directory for interactive calls. Specify a path to select a stable log filename.
+`-RedactionText` is literal text, including dollar signs. Specify only one buffered
+severity switch, or use `-BufferOnly -Level WARNING` / `ERROR`.
+Redaction is opt-in and does not guarantee detection of every secret.
 
 ## Migration from v2
 
@@ -66,11 +75,12 @@ Invoke-Pester ./Tests
 
 CI runs syntax validation, isolated import and Pester on Windows, Linux and macOS
 using each hosted runner's installed PowerShell. It does not test every PowerShell
-release. The inherited ten logger tests now exercise the command through module import.
-Concurrency stress tests and Windows/AD integration tests are future work.
+release. Logger tests exercise module import, redaction, failed-write retention, default paths,
+and simultaneous direct/buffered file writes from three processes. Windows/AD
+integration tests are future work.
 
 The logger is adopted from `PowerShell-Functions/New-LogEntry` at commit `d5a9edd`.
-The source and helper implementations are unchanged; integration tests import this module.
+The integrated logger includes the maintenance fixes described in CHANGELOG.md.
 
 See [CHANGELOG.md](./CHANGELOG.md) for history. Released under the [MIT License](./LICENSE).
 

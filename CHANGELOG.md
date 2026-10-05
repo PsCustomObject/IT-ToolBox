@@ -1,3 +1,12 @@
+## Logging and timer audit fixes (unreleased)
+
+- Treat redaction replacement text literally, preventing regex substitutions from reinserting secrets.
+- Serialize buffer snapshot/write/removal; retain entries after failed writes and preserve appended entries.
+- Resolve default log paths from the calling script, with current-directory fallback for interactive calls.
+- Reject conflicting buffered severity switches while retaining individual compatibility switches.
+- Require a non-null stopwatch in every Get-ElapsedTime parameter set.
+- Add regression tests and concurrent-process file-write coverage.
+
 ## String utilities restoration (unreleased)
 
 - Restore character conversion, string checksums and SHA-256 hashing.

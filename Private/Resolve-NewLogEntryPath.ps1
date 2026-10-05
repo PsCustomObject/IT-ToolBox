@@ -1,19 +1,15 @@
 function Resolve-NewLogEntryPath
 {
-    param([string]$Path)
+    param([string]$Path, [string]$CallerScriptPath)
 
     if (-not [string]::IsNullOrWhiteSpace($Path))
     {
         return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
     }
 
-    $basePath = if (-not [string]::IsNullOrWhiteSpace($script:PSCommandPath))
+    $basePath = if (-not [string]::IsNullOrWhiteSpace($CallerScriptPath))
     {
-        $script:PSCommandPath
-    }
-    elseif (-not [string]::IsNullOrWhiteSpace($PSCommandPath))
-    {
-        $PSCommandPath
+        $CallerScriptPath
     }
     else
     {

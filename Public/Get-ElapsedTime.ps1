@@ -65,17 +65,8 @@ function Get-ElapsedTime
 	[OutputType([timespan])]
 	param
 	(
-		[Parameter(ParameterSetName = 'FullOutput',
-				   Mandatory = $true)]
-		[Parameter(ParameterSetName = 'Days')]
-		[Parameter(ParameterSetName = 'Hours')]
-		[Parameter(ParameterSetName = 'Minutes')]
-		[Parameter(ParameterSetName = 'Seconds')]
-		[Parameter(ParameterSetName = 'TotalDays')]
-		[Parameter(ParameterSetName = 'TotalHours')]
-		[Parameter(ParameterSetName = 'TotalMilliseconds')]
-		[Parameter(ParameterSetName = 'TotalMinutes')]
-		[Parameter(ParameterSetName = 'TotalSeconds')]
+		[Parameter(Mandatory = $true)]
+		[ValidateNotNull()]
 		[System.Diagnostics.Stopwatch]
 		$ElapsedTime,
 		[Parameter(ParameterSetName = 'Days')]
