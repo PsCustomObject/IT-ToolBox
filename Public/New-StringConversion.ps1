@@ -24,7 +24,7 @@ function New-StringConversion
         [Parameter(ParameterSetName = 'ReplaceSpaces')][AllowEmptyString()][ValidateNotNull()][string]$ReplaceSpaces = '-',
         [ValidateNotNullOrEmpty()][string]$UnknownCharacter = '?'
     )
-    
+
     if ($PSBoundParameters.ContainsKey('UnicodeHashTable'))
     {
         # Normalize a private copy so the caller's map remains unchanged.
@@ -61,10 +61,10 @@ function New-StringConversion
 
     # Canonicalize equivalent Unicode sequences so character-map lookups are consistent.
     $normalized = $StringToConvert.Normalize([System.Text.NormalizationForm]::FormC)
-    
+
     # Enumerate text elements, such as surrogate pairs and combining sequences, as units.
     $elements = [System.Globalization.StringInfo]::GetTextElementEnumerator($normalized)
-    
+
     # Accumulate converted text without repeatedly creating longer strings.
     $result = [System.Text.StringBuilder]::new()
 

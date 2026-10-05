@@ -49,13 +49,33 @@ Invoke-Pester ./Tests
 
 ## Contribution workflow
 
-1. Create a branch from the current working branch.
+1. Preserve local changes, update master, and create a dedicated feature branch.
 2. Keep changes focused on one concern or feature area.
 3. Preserve existing behavior unless the change explicitly updates documented semantics.
 4. Validate the changed code with the relevant Pester tests and syntax checks.
 5. Update documentation if behavior, usage, or compatibility changes.
 
+Start work with explicit branch selection:
+
+```bash
+git switch master
+git pull --ff-only
+git switch -c feature/your-change
+```
+
+Before committing, select the same branch and stage only intended files:
+
+```bash
+git switch feature/your-change
+git diff --check
+git add <changed-files>
+git commit -m "Describe the change"
+git push -u origin feature/your-change
+```
+
 ## Coding expectations
+
+- Use four spaces for indentation, never tabs. Preserve intentional tabs in data.
 
 - Prefer clear, readable PowerShell idioms over clever shortcuts.
 - Maintain explicit error handling and avoid silently swallowing operational failures.

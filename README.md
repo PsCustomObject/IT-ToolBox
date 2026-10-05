@@ -2,7 +2,7 @@
 
 [![PowerShell 7.4+](https://img.shields.io/badge/PowerShell-7.4%2B-5391FE?logo=powershell)](https://github.com/PowerShell/PowerShell)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Status: Alpha Preview](https://img.shields.io/badge/status-alpha%20preview-orange.svg)](./CHANGELOG.md)
+[![Status: Beta Preview](https://img.shields.io/badge/status-beta%20preview-orange.svg)](./CHANGELOG.md)
 
 PowerShell utilities for enterprise automation, secure logging, identity validation,
 and cross-platform operational tooling.
@@ -89,8 +89,9 @@ Current roadmap focus:
 
 ## Status and requirements
 
-This is the **3.0.0-alpha1 modernization preview**, not the completed
-modernization release. Requires PowerShell 7.4 or later (Core edition). Windows
+This is the **3.0.0-beta1 modernization preview**. The modernization review is
+complete; live AD, remote CIM and service authentication remain unverified.
+Requires PowerShell 7.4 or later (Core edition). Windows
 PowerShell 5.1 is not supported.
 
 The module imports without WinSCP, GnuPG, Active Directory or Exchange
