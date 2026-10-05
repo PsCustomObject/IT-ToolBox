@@ -1,3 +1,7 @@
+# Historical AzureAD implementation; not loaded or exported by IT-ToolBox v3.
+# Calls the absent Test-AzureSession helper. Do not use as a working v3 command.
+# See docs/Integrations.md for explicit Microsoft Graph/Az session ownership.
+
 function Close-AzureSession
 {
     <#

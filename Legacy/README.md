@@ -1,8 +1,16 @@
 # Historical commands
 
-These four commands are preserved for reference and are not loaded or exported by v3.
-The string encryption design is unsuitable for new security implementations.
-Exchange helpers require a separate compatibility review.
+These three commands are reference implementations, not a supported compatibility
+layer. They are never loaded or exported by v3.
 
-Get-ScriptDirectory and Get-ScriptName now have supported implementations in Public/.
-See the root README for caller resolution and interactive behavior.
+| Command | Status |
+| --- | --- |
+| New-StringEncryption | Historical unauthenticated encryption; use only to migrate existing data in a separate session |
+| New-StringDecryption | Historical decryption; original passphrase/salt/vector required |
+| Close-AzureSession | AzureAD dependency and absent Test-AzureSession helper |
+
+See [the integration review](../docs/Integrations.md) before planning a replacement.
+The root README documents supported encryption and script-context replacements.
+
+The former Exchange session wrappers have been removed. Their source remains in Git
+history; use ExchangeOnlineManagement directly for Exchange Online operations.

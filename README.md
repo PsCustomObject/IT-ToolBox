@@ -5,7 +5,7 @@ enterprise administration. Version 3 modernizes the module in small, tested step
 
 ## Status and requirements
 
-This is the **3.0.0-alpha1 foundation**, not the completed modernization release.
+This is the **3.0.0-alpha1 modernization preview**, not the completed modernization release.
 Requires PowerShell 7.4 or later (Core edition). Windows PowerShell 5.1 is not supported.
 The foundation imports without WinSCP, GnuPG, Active Directory or Exchange dependencies.
 
@@ -68,9 +68,9 @@ Redaction is opt-in and does not guarantee detection of every secret.
 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
-- `Legacy/` retains string encryption and Exchange helpers for reference.
+- `Legacy/` retains historical string encryption and AzureAD helpers for reference.
 - All commands formerly retained in `Staging/v3/` now have supported implementations.
-  Its README records the migration; separate legacy/staged integrations remain excluded. They are not currently exported.
+  Its README records the migration; historical service integrations remain excluded.
 - Only the twenty-nine listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
@@ -86,8 +86,8 @@ Invoke-Pester ./Tests
 CI runs syntax validation, isolated import and Pester on Windows, Linux and macOS
 using each hosted runner's installed PowerShell. It does not test every PowerShell
 release. Logger tests exercise module import, redaction, failed-write retention, default paths,
-and simultaneous direct/buffered file writes from three processes. Windows/AD
-integration tests are future work.
+and simultaneous direct/buffered file writes from three processes. Temporary HKCU registry tests run on Windows. Live AD, remote CIM and service
+authentication integration tests are future work.
 
 The logger is adopted from `PowerShell-Functions/New-LogEntry` at commit `d5a9edd`.
 The integrated logger includes the maintenance fixes described in CHANGELOG.md.
@@ -399,3 +399,16 @@ Wildcard characters are treated literally. Non-filesystem provider paths and pat
 without a filename throw; no existence, extension or file-type check is performed.
 Unlike the legacy implementations, these helpers do not depend on script-scoped
 MyInvocation or silently return a module filename.
+
+## Service integration boundaries
+
+WinSCP/SCP and PGP/OpenPGP are separate module projects. No transfer backend or PGP
+backend is bundled into this module; AES-GCM string encryption remains independent.
+
+The AzureAD helper is historical source, not a supported session-management command.
+The legacy Exchange wrappers have been removed; use ExchangeOnlineManagement
+directly for Exchange Online. The process-wide certificate-bypass snippet has been
+removed. Import regression tests verify that loading and reloading IT-ToolBox leaves
+TLS callbacks, service sessions and caller preferences alone, and excludes archived
+and staged code. See [the integration review](./docs/Integrations.md) for defects,
+service-specific migration directions and requirements for future wrappers.
