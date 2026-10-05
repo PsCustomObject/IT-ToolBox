@@ -405,7 +405,7 @@ MyInvocation or silently return a module filename.
 WinSCP/SCP and PGP/OpenPGP are separate module projects. No transfer backend or PGP
 backend is bundled into this module; AES-GCM string encryption remains independent.
 
-The AzureAD helper is historical source, not a supported session-management command.
+The AzureAD helper has been removed; use Microsoft Graph or Microsoft Entra PowerShell directly.
 The legacy Exchange wrappers have been removed; use ExchangeOnlineManagement
 directly for Exchange Online. The process-wide certificate-bypass snippet has been
 removed. Import regression tests verify that loading and reloading IT-ToolBox leaves
