@@ -22,6 +22,8 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | Test-IsValidPath | Native filesystem path syntax; no existence check |
 | Test-IsIP | Standard IPv4/IPv6 literals; strict dotted IPv4 |
 | Test-IsDate | Culture-aware date validation with optional exact format |
+| Test-IsEmail | Common bare email-address syntax, including IDN domains |
+| Test-IsUrl | Absolute HTTP/HTTPS/FTP/FTPS URL syntax |
 | New-StringEncryption | Passphrase-based AES-256-GCM string encryption |
 | New-StringDecryption | Authenticate and decrypt the versioned string format |
 | New-RandomString | Secure random selection from the historical alphabet |
@@ -58,10 +60,10 @@ Redaction is opt-in and does not guarantee detection of every secret.
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 9 candidate commands pending tests and compatibility fixes.
-  These include existing validators, strings, password generation, API requests,
-  registry, uptime and AD utilities. They are not currently exported.
-- Only the eighteen listed commands are exported. Private helpers, variables and aliases
+- `Staging/v3/` retains 7 candidate commands pending tests and compatibility fixes.
+  These cover logon timestamps, uptime, report chains, character removal,
+  distinguished names, user principal names and registry values. They are not currently exported.
+- Only the twenty listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -96,6 +98,34 @@ filename. IPv4 shorthand accepted by .NET is deliberately rejected.
 
 `Test-IsDate` defaults to the current culture. For deterministic input, use
 `Test-IsDate '2026-10-04' -Format 'yyyy-MM-dd' -Culture ''` (invariant culture).
+
+`Test-IsEmail` validates a practical subset of bare mailbox syntax: ASCII dot-atom
+local parts (including plus tags) and DNS domains, including IDNs and single-label
+names. Limits are 64 characters for the local part, 63 ASCII characters per domain
+label and 254 characters for the address after IDN conversion. It intentionally
+rejects display names, comments, quoted or Unicode local parts, address literals,
+whitespace and controls. It is not a complete RFC email validator and does not
+check mailbox existence, DNS or deliverability. The `Email`, `Mail` and `Address`
+parameter aliases remain available.
+
+`Test-IsUrl` accepts absolute HTTP, HTTPS, FTP and FTPS URLs with DNS/IDN hosts,
+localhost, strict dotted IPv4 or bracketed IPv6, optional numeric ports 0–65535,
+paths, queries and fragments. DNS root dots are allowed. It rejects credentials,
+relative URLs, other schemes, raw whitespace/controls, backslashes, malformed
+percent escapes, empty/invalid ports, IPv4 shorthand and IPv6 scope identifiers.
+It checks syntax only, not endpoint reachability or whether fetching a URL is safe.
+
+```powershell
+'person+tag@example.com', 'bad' | Test-IsEmail
+'https://example.com:8443/api?name=value', '/relative' | Test-IsUrl
+```
+
+Both commands return one boolean per pipeline input; explicitly supplied null,
+empty or malformed input returns false. Migration from the staged versions:
+email validation no longer accepts a display-name/comment wrapper, and the URL
+regex is replaced with structured parsing and host checks. FTP and FTPS remain
+supported for compatibility; this does not introduce a file-transfer command.
+
 
 ## String encryption
 

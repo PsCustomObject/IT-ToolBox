@@ -18,6 +18,8 @@
         'Test-IsValidPath'
         'Test-IsIP'
         'Test-IsDate'
+        'Test-IsEmail'
+        'Test-IsUrl'
         'New-StringEncryption'
         'New-StringDecryption'
         'New-RandomString'
