@@ -22,6 +22,8 @@ Export-ModuleMember -Function @(
         'Test-IsUrl'
         'Convert-LogonTimestamp'
         'Get-OsUpTime'
+        'Remove-SpecialCharacters'
+        'Test-RegistryValue'
         'New-StringEncryption'
         'New-StringDecryption'
         'New-RandomString'

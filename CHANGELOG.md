@@ -1,3 +1,14 @@
+## Filesystem naming and registry restoration (unreleased)
+
+- Restore Remove-SpecialCharacters and Test-RegistryValue; export twenty-four commands.
+- Preserve the historical punctuation policy; return a rename preview by default.
+- Honor WhatIf/Confirm, preflight collisions and rename deepest descendants first.
+- Use literal paths, include hidden entries and skip symbolic links/junctions.
+- Preserve LogActivites with a corrected alias and configurable portable log path.
+- Check Windows registry value names regardless of data; support unnamed values.
+- Propagate operational failures and document platform and non-transactional behavior.
+- Add real filesystem tests and Windows-only temporary HKCU integration tests.
+
 ## Timestamp and uptime restoration (unreleased)
 
 - Restore Convert-LogonTimestamp and Get-OsUpTime; export twenty-two supported commands.
