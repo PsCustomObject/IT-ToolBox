@@ -1,3 +1,14 @@
+## Timestamp and uptime restoration (unreleased)
+
+- Restore Convert-LogonTimestamp and Get-OsUpTime; export twenty-two supported commands.
+- Preserve local DateTime and default date formatting; add UTC and pipeline conversion.
+- Treat zero logon timestamps as no recorded logon; reject invalid FILETIME values.
+- Use invariant string formatting and document replicated AD timestamp semantics.
+- Preserve uptime days/TimeSpan outputs; support local uptime on Windows, Linux and macOS.
+- Replace remote WMI with CIM, use the server clock, support explicit/prompted credentials and clean up sessions.
+- Propagate errors without changing caller preferences; document remote Windows requirements.
+- Add boundary, culture, local uptime and mocked CIM regression tests.
+
 ## Email and URL validation restoration (unreleased)
 
 - Restore Test-IsEmail and Test-IsUrl; export twenty supported commands.

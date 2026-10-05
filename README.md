@@ -24,6 +24,8 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | Test-IsDate | Culture-aware date validation with optional exact format |
 | Test-IsEmail | Common bare email-address syntax, including IDN domains |
 | Test-IsUrl | Absolute HTTP/HTTPS/FTP/FTPS URL syntax |
+| Convert-LogonTimestamp | AD FILETIME conversion with local/UTC output |
+| Get-OsUpTime | Local OS uptime and remote Windows CIM queries |
 | New-StringEncryption | Passphrase-based AES-256-GCM string encryption |
 | New-StringDecryption | Authenticate and decrypt the versioned string format |
 | New-RandomString | Secure random selection from the historical alphabet |
@@ -60,10 +62,10 @@ Redaction is opt-in and does not guarantee detection of every secret.
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 7 candidate commands pending tests and compatibility fixes.
-  These cover logon timestamps, uptime, report chains, character removal,
-  distinguished names, user principal names and registry values. They are not currently exported.
-- Only the twenty listed commands are exported. Private helpers, variables and aliases
+- `Staging/v3/` retains 5 candidate commands pending tests and compatibility fixes.
+  These cover report chains, character removal, distinguished names,
+  user principal names and registry values. They are not currently exported.
+- Only the twenty-two listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -246,3 +248,37 @@ Use `-LegacyFormat` only when comparing with old delimiter-free decimal output.
 The hash algorithm remains SHA-256; the default representation intentionally changes.
 Both hash commands use UTF-8 without a BOM and do not normalize text. Neither is
 a password-storage function or an authentication mechanism.
+
+## Logon timestamps and OS uptime
+
+`Convert-LogonTimestamp` accepts an unsigned decimal FILETIME string or Int64 value
+and supports pipeline input. Local DateTime output remains the default; use `-Utc`
+for UTC. `-StringOutput` defaults to `yyyy-MM-dd`, and `-DateFormat` also selects
+string output. String formatting uses invariant culture. Invalid values throw.
+Zero means no recorded logon and produces no output rather than a date in 1601.
+The command converts a supplied value only: AD's replicated `lastLogonTimestamp`
+is not an exact record of the user's latest authentication.
+
+```powershell
+Convert-LogonTimestamp -TimeStamp $user.lastLogonTimestamp -Utc
+Convert-LogonTimestamp -TimeStamp $user.lastLogonTimestamp -Utc -DateFormat 'yyyy-MM-dd HH:mm:ss'
+Get-OsUpTime -FullOutput
+Get-OsUpTime -ComputerName 'server01' -Credential $credential -FullOutput
+```
+
+`Get-OsUpTime` preserves whole elapsed days as Int32 by default and TimeSpan with
+`-FullOutput`. Local uptime delegates to PowerShell's built-in `Get-Uptime` on
+Windows, Linux and macOS. Remote uptime requires Windows CIM cmdlets and a
+reachable Windows CIM endpoint; no remote Linux/macOS support is implied.
+
+Remote queries replace removed `Get-WmiObject` calls with `Get-CimInstance`.
+They compute uptime from the server's `LocalDateTime` and `LastBootUpTime`, not
+the client's clock. With `-Credential`, a temporary CIM session is created and
+cleanup is attempted in `finally`. The historical `-Credentials` switch prompts
+with `Get-Credential`; either credential option requires `-ComputerName`. Errors
+terminate rather than returning warnings and no value. A failed cleanup is reported
+without replacing an already-failed query's error. The caller's error preference
+is not changed.
+
+Tests cover actual local uptime and mocked remote query/session behavior. Remote
+Windows connectivity and authentication have not been integration-tested.

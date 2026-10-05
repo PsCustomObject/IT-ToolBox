@@ -20,6 +20,8 @@ Export-ModuleMember -Function @(
         'Test-IsDate'
         'Test-IsEmail'
         'Test-IsUrl'
+        'Convert-LogonTimestamp'
+        'Get-OsUpTime'
         'New-StringEncryption'
         'New-StringDecryption'
         'New-RandomString'
