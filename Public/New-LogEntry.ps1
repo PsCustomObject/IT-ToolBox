@@ -49,7 +49,9 @@ function New-LogEntry
         Returns buffered log entries without clearing them.
 
     .PARAMETER FlushBuffer
-        Writes buffered entries to the log file and clears the buffer after a successful write.
+        Writes buffered entries to the log file and removes the written entries after a successful write.
+        A failed file write retains the buffer for retry. A partial filesystem write can leave
+        content on disk, so a retry after an I/O failure can duplicate that content.
 
     .PARAMETER ClearBuffer
         Clears buffered entries without writing them.
@@ -72,7 +74,7 @@ function New-LogEntry
         Additional regular expression patterns to redact before formatting or writing the message.
 
     .PARAMETER RedactionText
-        Replacement text used for redacted content. Defaults to [REDACTED].
+        Literal replacement text used for redacted content (regex substitutions are not expanded). Defaults to [REDACTED].
 
     .PARAMETER NoTag
         Omits the severity tag from the formatted entry.
@@ -170,12 +172,19 @@ function New-LogEntry
 
     begin
     {
+        $callerScriptPath = $MyInvocation.ScriptName
         $pendingEntries = [System.Collections.Generic.List[string]]::new()
         $activeRedactPatterns = [System.Collections.Generic.List[string]]::new()
 
         if ($IsWarningMessage -and $IsErrorMessage)
         {
             throw 'Use either -IsWarningMessage or -IsErrorMessage, not both.'
+        }
+
+        $bufferSeverityCount = [int]$BufferOnlyInfo.IsPresent + [int]$BufferOnlyWarning.IsPresent + [int]$BufferOnlyError.IsPresent
+        if ($bufferSeverityCount -gt 1)
+        {
+            throw 'Use only one of -BufferOnlyInfo, -BufferOnlyWarning, or -BufferOnlyError.'
         }
 
         if ($PSBoundParameters.ContainsKey('Level') -and ($IsWarningMessage -or $IsErrorMessage -or $BufferOnlyWarning -or $BufferOnlyError -or $BufferOnlyInfo))
@@ -234,14 +243,13 @@ function New-LogEntry
 
             'FlushBuffer'
             {
-                $bufferedLines = Get-NewLogEntryBuffer
+                $resolvedLogPath = Resolve-NewLogEntryPath -Path $LogFilePath -CallerScriptPath $callerScriptPath
+                $bufferedLines = @(Flush-NewLogEntryBuffer -Path $resolvedLogPath -LockTimeoutSeconds $LockTimeoutSeconds)
 
                 if ($bufferedLines.Count -eq 0)
                 {
                     return
                 }
-
-                Write-NewLogEntryLines -Lines $bufferedLines -Path $LogFilePath -LockTimeoutSeconds $LockTimeoutSeconds
 
                 if (-not $NoConsole)
                 {
@@ -250,8 +258,6 @@ function New-LogEntry
                         Write-Host $line
                     }
                 }
-
-                Clear-NewLogEntryBuffer
 
                 if ($PassThru)
                 {
@@ -294,7 +300,8 @@ function New-LogEntry
             return
         }
 
-        Write-NewLogEntryLines -Lines $entries -Path $LogFilePath -LockTimeoutSeconds $LockTimeoutSeconds
+        $resolvedLogPath = Resolve-NewLogEntryPath -Path $LogFilePath -CallerScriptPath $callerScriptPath
+        Write-NewLogEntryLines -Lines $entries -Path $resolvedLogPath -LockTimeoutSeconds $LockTimeoutSeconds
 
         if (-not $NoConsole)
         {

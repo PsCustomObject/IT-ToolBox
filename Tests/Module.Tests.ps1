@@ -42,3 +42,24 @@ Describe 'Timers' {
         Get-TimerStatus -Timer $timer | Should -BeFalse
     }
 }
+
+
+Describe 'Elapsed-time input validation' {
+    It 'requires a non-null stopwatch in every parameter set' {
+        $command = Get-Command Get-ElapsedTime -Module IT-ToolBox
+        foreach ($set in $command.ParameterSets) {
+            ($set.Parameters | Where-Object Name -eq ElapsedTime).IsMandatory | Should -BeTrue
+        }
+        { Get-ElapsedTime -ElapsedTime $null -Seconds } | Should -Throw
+    }
+
+    It 'returns the requested elapsed-time component: <Component>' -ForEach @(
+        @{ Component = 'Days' }; @{ Component = 'Hours' }; @{ Component = 'Minutes' }
+        @{ Component = 'Seconds' }; @{ Component = 'TotalDays' }; @{ Component = 'TotalHours' }
+        @{ Component = 'TotalMinutes' }; @{ Component = 'TotalSeconds' }; @{ Component = 'TotalMilliseconds' }
+    ) {
+        $timer = [System.Diagnostics.Stopwatch]::new()
+        $selector = @{ $Component = $true }
+        Get-ElapsedTime -ElapsedTime $timer @selector | Should -Be $timer.Elapsed.$Component
+    }
+}
