@@ -1,6 +1,7 @@
-# Candidates for v3
+# Completed v3 candidate migration
 
-These existing utilities are retained unchanged but are not loaded or exported.
-They return to Public only after behavioral tests and necessary PowerShell 7 fixes.
-Remaining candidates cover report chains, distinguished names and user principal names.
-This folder is not a supported API and must not be dot-sourced as part of normal module import.
+All former candidates in this directory now have supported implementations in
+Public with tests and documented compatibility changes. This directory contains
+no commands and is not loaded by the module.
+
+Legacy commands and the separate parent Staging integrations remain excluded.

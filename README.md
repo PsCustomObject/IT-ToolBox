@@ -28,6 +28,9 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | Get-OsUpTime | Local OS uptime and remote Windows CIM queries |
 | Remove-SpecialCharacters | Preview or apply a recursive filesystem naming policy |
 | Test-RegistryValue | Windows registry value-name existence check |
+| Test-IsValidDn | Practical distinguished-name syntax validation |
+| Test-IsValidUpn | Practical UPN syntax validation |
+| Get-ReportChain | Transitive AD manager report-chain queries |
 | New-StringEncryption | Passphrase-based AES-256-GCM string encryption |
 | New-StringDecryption | Authenticate and decrypt the versioned string format |
 | New-RandomString | Secure random selection from the historical alphabet |
@@ -64,9 +67,9 @@ Redaction is opt-in and does not guarantee detection of every secret.
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 3 candidate commands pending tests and compatibility fixes.
-  These cover report chains, distinguished names and user principal names. They are not currently exported.
-- Only the twenty-four listed commands are exported. Private helpers, variables and aliases
+- All commands formerly retained in `Staging/v3/` now have supported implementations.
+  Its README records the migration; separate legacy/staged integrations remain excluded. They are not currently exported.
+- Only the twenty-seven listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -324,3 +327,49 @@ registries or select an alternate registry view.
 
 Filesystem tests use real temporary trees. Windows CI additionally exercises real
 temporary HKCU keys; those registry integration tests are skipped on Linux/macOS.
+
+## AD naming and report chains
+
+`Test-IsValidDn` checks a documented practical DN syntax, with escaped separators,
+hex escapes, descriptor/OID attribute types and multi-valued RDNs. It accepts
+non-DC-rooted names and does not restrict attributes to CN/OU/DC. It rejects empty
+names/values, literal controls, invalid/dangling escapes, unescaped leading/trailing
+value spaces and legacy quoted values. Hex-string notation is checked without BER
+validation; decoded escape bytes are not checked for UTF-8 validity. This is not a
+complete RFC parser, a canonical comparison or a schema/existence check.
+
+`Test-IsValidUpn` uses a practical ASCII username policy: letters/digits at the
+edges, with dots, underscores, hyphens and apostrophes internally, excluding
+consecutive dots. The suffix supports DNS/IDN names, long suffixes and single-label
+names. This is not email validation or a complete AD/Entra account-creation policy;
+it does not check account existence or whether a suffix is configured.
+
+Both validators preserve their parameter aliases, support pipeline input and
+return false for explicit null, empty or unsupported input. These policies replace
+the old DN regex and email-derived UPN regex; previously accepted/rejected inputs
+can change as described above.
+
+```powershell
+Test-IsValidDn -DN 'CN=Last\, First,OU=People,DC=example,DC=com'
+Test-IsValidUpn -UPN 'first.last@example.technology'
+Get-ReportChain -SAM 'manager01' -DomainController 'dc01' -Properties SamAccountName,Mail
+```
+
+`Get-ReportChain` retains SAM, UPN and DN identity parameter sets and aliases,
+DomainController, and ordered property selection. Its default properties remain
+SamAccountName, UserPrincipalName, Mail, Manager and DirectReports; `-Properties '*'`
+requests and projects all properties. It resolves exactly one manager, then uses
+AD's matching-rule-in-chain filter to retrieve direct and transitive reports,
+excluding the manager itself. Result order is the directory's order.
+
+UPN lookup uses an escaped LDAP equality assertion rather than interpolated
+PowerShell filter expressions. Manager DN assertion values are escaped separately
+from DN string escaping, including UTF-8 bytes. Server and terminating error
+behavior are applied to both queries. Missing/ambiguous managers and AD failures
+throw rather than returning a warning and undefined results. The caller's error
+preference is not changed.
+
+No ActiveDirectory dependency is required to import IT-ToolBox or use the naming
+validators. Get-ReportChain requires an available Get-ADUser command and access to
+an AD endpoint when invoked; it uses the command's ambient authentication. Tests
+mock AD queries and verify filter construction; no live domain query is tested.

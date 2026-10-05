@@ -1,3 +1,14 @@
+## AD helper restoration (unreleased)
+
+- Restore Test-IsValidDn, Test-IsValidUpn and Get-ReportChain; export twenty-seven commands.
+- Replace DN/UPN regexes with documented practical syntax policies and pipeline support.
+- Support DN escapes, multi-valued RDNs, long UPN suffixes and IDN suffixes.
+- Preserve report-chain identities, aliases, server selection and property projection.
+- Escape LDAP assertion values for UPN lookup and transitive manager queries.
+- Require exactly one manager, exclude the manager from results and propagate AD errors.
+- Keep ActiveDirectory optional at import; add mocked query and syntax regression tests.
+- Complete migration of all former Staging/v3 candidates.
+
 ## Filesystem naming and registry restoration (unreleased)
 
 - Restore Remove-SpecialCharacters and Test-RegistryValue; export twenty-four commands.
