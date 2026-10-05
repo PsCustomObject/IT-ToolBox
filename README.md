@@ -18,6 +18,8 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | Get-TimerStatus | Check whether a Stopwatch is running |
 | Stop-Timer | Stop a Stopwatch |
 | Get-ElapsedTime | Retrieve elapsed time or individual components |
+| Get-ScriptDirectory | Directory of the calling script or an explicit script path |
+| Get-ScriptName | Filename of the calling script or an explicit script path |
 | Test-FileName | Native filename validation; optional Windows-compatible rules |
 | Test-IsValidPath | Native filesystem path syntax; no existence check |
 | Test-IsIP | Standard IPv4/IPv6 literals; strict dotted IPv4 |
@@ -66,10 +68,10 @@ Redaction is opt-in and does not guarantee detection of every secret.
 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
-- `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
+- `Legacy/` retains string encryption and Exchange helpers for reference.
 - All commands formerly retained in `Staging/v3/` now have supported implementations.
   Its README records the migration; separate legacy/staged integrations remain excluded. They are not currently exported.
-- Only the twenty-seven listed commands are exported. Private helpers, variables and aliases
+- Only the twenty-nine listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -373,3 +375,27 @@ No ActiveDirectory dependency is required to import IT-ToolBox or use the naming
 validators. Get-ReportChain requires an available Get-ADUser command and access to
 an AD endpoint when invoked; it uses the command's ambient authentication. Tests
 mock AD queries and verify filter construction; no live domain query is tested.
+
+## Script context
+
+Get-ScriptDirectory and Get-ScriptName resolve the immediately calling script rather
+than the module implementation file. Calls inside a function defined in a script
+use that defining script; a nested or dot-sourced script uses its own path. Calls
+made interactively without an explicit path return no output. They do not read the
+historical, externally supplied hostinvocation variable.
+
+```powershell
+# Inside automation.ps1:
+$scriptDirectory = Get-ScriptDirectory
+$scriptName = Get-ScriptName
+# Explicit paths also work interactively, including paths that do not yet exist:
+Get-ScriptDirectory -ScriptPath './scripts/automation.ps1'
+'./scripts/automation.ps1', './scripts/other.ps1' | Get-ScriptName
+```
+
+ScriptPath accepts literal absolute/relative filesystem filenames and pipeline
+input. Relative paths use the current PowerShell location, not the caller's directory.
+Wildcard characters are treated literally. Non-filesystem provider paths and paths
+without a filename throw; no existence, extension or file-type check is performed.
+Unlike the legacy implementations, these helpers do not depend on script-scoped
+MyInvocation or silently return a module filename.
