@@ -11,7 +11,7 @@ their documented optional dependencies when explicitly invoked.
 | --- | --- | --- |
 | SCP / WinSCP | Excluded | Dedicated transfer module; no bundled WinSCP binaries here |
 | PGP / OpenPGP | Excluded | Dedicated encryption module; backend design is separate from string AES-GCM |
-| AzureAD session helper | Historical source in Legacy/ | Explicit Graph or Entra authentication for directory operations |
+| AzureAD session helper | Removed | Use Microsoft Graph or Microsoft Entra PowerShell directly |
 | Azure resource sessions | No wrapper | Az.Accounts owns its Azure context; it is distinct from Graph |
 | Exchange Server remoting | Legacy wrappers removed | Use the documented Exchange Server management workflow for the target environment |
 | Exchange Online | No wrapper | ExchangeOnlineManagement owns authentication and disconnection |
@@ -19,28 +19,23 @@ their documented optional dependencies when explicitly invoked.
 
 ## Why the old session helpers are excluded
 
-Close-AzureSession calls Test-AzureSession, which is absent from this repository,
-and Disconnect-AzureAD. Microsoft documents migration from the deprecated AzureAD
-module to Graph PowerShell; this is more than a command-name substitution.
-Graph/Entra directory authentication and Az resource contexts are distinct. The old command must not be
-aliased to a function that clears a different service's credentials or context.
+The former Close-AzureSession helper called the absent Test-AzureSession command and
+Disconnect-AzureAD. It has been removed from the current tree. Git history retains
+the source for reference; it is not part of the supported v3 API.
 
-New-ExchangeSession and Close-ExchangeSession have been removed from the repository's
-current tree. Their historical implementations targeted on-premises remoting and
-had credential handling, session-selection and error-reporting defects. Git history
-retains the source if needed; they are not part of the supported v3 API.
+Microsoft Graph and Microsoft Entra PowerShell own directory authentication. Az
+PowerShell owns Azure resource contexts. These contexts are distinct and must be
+managed explicitly by the service-specific module.
 
-Use Connect-ExchangeOnline and Disconnect-ExchangeOnline directly from Microsoft's
+New-ExchangeSession and Close-ExchangeSession have also been removed. Use
+Connect-ExchangeOnline and Disconnect-ExchangeOnline directly from Microsoft's
 ExchangeOnlineManagement module for Exchange Online. IT-ToolBox does not wrap these
-commands, install that module or manage its sessions. Exchange Server on-premises
-has a separate management workflow; ExchangeOnlineManagement is not a general
-replacement for its remote PowerShell endpoint.
+commands or install that module. Exchange Server on-premises has a separate
+management workflow.
 
-The removed Enable-SelfSignedCertificate snippet registered a type whose Ignore
-method could accept every server certificate through ServicePointManager. The
-filename suggested endpoint-specific self-signed certificate support, but the
-implementation was a global validation bypass. No replacement bypass is provided.
-The old source remains in Git history.
+The removed Enable-SelfSignedCertificate snippet registered a global certificate
+validation bypass. No replacement bypass is provided; configure certificate trust
+for the endpoint instead.
 
 ## Requirements for future session wrappers
 

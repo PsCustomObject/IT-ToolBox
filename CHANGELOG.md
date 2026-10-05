@@ -1,6 +1,6 @@
 ## Integration boundary review (unreleased)
 
-- Archive Close-AzureSession in Legacy; document its missing Test-AzureSession dependency.
+- Remove the obsolete Close-AzureSession helper and document service-specific authentication ownership.
 - Remove the process-wide certificate-validation bypass snippet; retain Git history.
 - Remove legacy New-ExchangeSession and Close-ExchangeSession; retain their Git history.
 - Delegate Exchange Online connection management to ExchangeOnlineManagement.
