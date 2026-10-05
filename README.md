@@ -68,7 +68,7 @@ Redaction is opt-in and does not guarantee detection of every secret.
 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
-- `Legacy/` retains historical string encryption and AzureAD helpers for reference.
+- `Legacy/` retains historical string encryption helpers for migration reference.
 - All commands formerly retained in `Staging/v3/` now have supported implementations.
   Its README records the migration; historical service integrations remain excluded.
 - Only the twenty-nine listed commands are exported. Private helpers, variables and aliases
@@ -77,6 +77,12 @@ Redaction is opt-in and does not guarantee detection of every secret.
 - The module GUID and Git history are preserved.
 
 ## Tests and CI
+
+For a clean installable preview archive, run `./scripts/Build-Module.ps1` in
+PowerShell after running the tests. The archive includes supported module code
+and documentation, excluding Legacy, Staging and development files. See
+[build and installation instructions](./docs/Packaging.md). Nothing is published
+or installed automatically.
 
 ```powershell
 Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser

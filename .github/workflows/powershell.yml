@@ -7,6 +7,11 @@ on:
       - 'Public/**'
       - 'Private/**'
       - 'Tests/**'
+      - 'scripts/**'
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
       - 'IT-ToolBox.psd1'
       - 'IT-ToolBox.psm1'
       - '.github/workflows/powershell.yml'
@@ -15,6 +20,11 @@ on:
       - 'Public/**'
       - 'Private/**'
       - 'Tests/**'
+      - 'scripts/**'
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
       - 'IT-ToolBox.psd1'
       - 'IT-ToolBox.psm1'
       - '.github/workflows/powershell.yml'
@@ -47,7 +57,7 @@ jobs:
           if ($PSVersionTable.PSVersion -lt [version]'7.4') {
               throw 'PowerShell 7.4 or later is required.'
           }
-          foreach ($file in Get-ChildItem ./Public, ./Private, ./Tests -Filter *.ps1 -Recurse) {
+          foreach ($file in Get-ChildItem ./Public, ./Private, ./Tests, ./scripts -Filter *.ps1 -Recurse) {
               $tokens = $null
               $parseErrors = $null
               $null = [System.Management.Automation.Language.Parser]::ParseFile(
@@ -84,3 +94,6 @@ jobs:
           $configuration.Run.Exit = $true
           $configuration.Output.Verbosity = 'Detailed'
           Invoke-Pester -Configuration $configuration
+
+      - name: Build supported module archive
+        run: ./scripts/Build-Module.ps1

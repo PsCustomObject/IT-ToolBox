@@ -6,3 +6,7 @@
 *.Package.ps1
 IT-ToolBox.psproj
 CustomMenu.inf*tempPoint*
+
+# Local build output and macOS metadata
+/artifacts/
+.DS_Store
