@@ -14,6 +14,8 @@ Export-ModuleMember -Function @(
     'Get-TimerStatus'
     'Stop-Timer'
     'Get-ElapsedTime'
+        'Get-ScriptDirectory'
+        'Get-ScriptName'
         'Test-FileName'
         'Test-IsValidPath'
         'Test-IsIP'

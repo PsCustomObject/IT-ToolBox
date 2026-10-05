@@ -1,3 +1,12 @@
+## Script-context helper restoration (unreleased)
+
+- Restore Get-ScriptDirectory and Get-ScriptName; export twenty-nine commands.
+- Resolve the immediately calling script rather than module-scoped invocation data.
+- Support explicit literal filesystem paths and pipeline input without requiring existence.
+- Return no output for interactive calls without a script path.
+- Remove dependence on the externally supplied hostinvocation variable.
+- Add real script, nested/dot-sourced caller and isolated interactive regression tests.
+
 ## AD helper restoration (unreleased)
 
 - Restore Test-IsValidDn, Test-IsValidUpn and Get-ReportChain; export twenty-seven commands.
