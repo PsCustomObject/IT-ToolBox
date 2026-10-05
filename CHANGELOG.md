@@ -1,3 +1,13 @@
+## Integration boundary review (unreleased)
+
+- Archive Close-AzureSession in Legacy; document its missing Test-AzureSession dependency.
+- Remove the process-wide certificate-validation bypass snippet; retain Git history.
+- Document Exchange credential/session-selection defects and separate service lifecycles.
+- Keep WinSCP/SCP and PGP/OpenPGP assigned to their own module projects.
+- Replace the stale staging placeholder and correct README test coverage.
+- Add isolated import/reload regression coverage for TLS, sessions and archive exclusion.
+- Retain the 29-command supported API and alpha1 preview version.
+
 ## Script-context helper restoration (unreleased)
 
 - Restore Get-ScriptDirectory and Get-ScriptName; export twenty-nine commands.
