@@ -122,13 +122,12 @@ Describe 'Registry platform boundary' {
 Describe 'Windows registry integration' -Skip:(-not $IsWindows) {
     BeforeAll {
         $registryPath = 'HKCU:\Software\ITToolBoxTests-' + [guid]::NewGuid().ToString()
-        New-Item -Path $registryPath | Out-Null
-        New-ItemProperty -LiteralPath $registryPath -Name Empty -Value '' -PropertyType String | Out-Null
-        New-ItemProperty -LiteralPath $registryPath -Name Zero -Value 0 -PropertyType DWord | Out-Null
-        New-ItemProperty -LiteralPath $registryPath -Name 'A*B' -Value 'literal' -PropertyType String | Out-Null
-        $key = Get-Item -LiteralPath $registryPath
-        $key.SetValue('', 'default')
-        $key.Dispose()
+        New-Item -Path $registryPath -ErrorAction Stop | Out-Null
+        New-ItemProperty -LiteralPath $registryPath -Name Empty -Value '' -PropertyType String -ErrorAction Stop | Out-Null
+        New-ItemProperty -LiteralPath $registryPath -Name Zero -Value 0 -PropertyType DWord -ErrorAction Stop | Out-Null
+        New-ItemProperty -LiteralPath $registryPath -Name 'A*B' -Value 'literal' -PropertyType String -ErrorAction Stop | Out-Null
+        # Get-Item returns a read-only key; use the provider to set its default value.
+        Set-Item -LiteralPath $registryPath -Value 'default' -ErrorAction Stop
     }
     AfterAll {
         Remove-Item -LiteralPath $registryPath -Recurse -Force
