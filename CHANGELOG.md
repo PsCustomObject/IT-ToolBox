@@ -1,3 +1,13 @@
+## Email and URL validation restoration (unreleased)
+
+- Restore Test-IsEmail and Test-IsUrl; export twenty supported commands.
+- Preserve email parameter aliases and the HTTP/HTTPS/FTP/FTPS scheme set.
+- Define common bare email syntax with IDN-domain support and explicit length limits.
+- Replace the URL regex with structured parsing and validation of hosts, ports and escapes.
+- Reject malformed input with false; add per-record pipeline support without network calls.
+- Document intentional validation-policy changes and reduce staged candidates to seven.
+- Add 96 validator cases covering boundaries, Unicode, IPv6 and malformed inputs.
+
 ## Logging and timer audit fixes (unreleased)
 
 - Treat redaction replacement text literally, preventing regex substitutions from reinserting secrets.
