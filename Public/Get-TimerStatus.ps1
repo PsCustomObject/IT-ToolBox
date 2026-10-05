@@ -1,29 +1,30 @@
 function Get-TimerStatus
 {
     <#
-        .SYNOPSIS
-            Will return boolean value representing status of an existing stopwatch.
+    .SYNOPSIS
+        Returns a boolean indicating whether an existing stopwatch is running.
 
-        .DESCRIPTION
-            Function requires a [System.Diagnostics.Stopwatch] object as input and will return $True if stopwatch is running or $False otherwise.
+    .DESCRIPTION
+        This function requires a [System.Diagnostics.Stopwatch] object as input and returns
+        $True if the stopwatch is running, or $False otherwise.
 
-        .PARAMETER Timer
-            A [System.Diagnostics.Stopwatch] object representing the StopWatch to check status for.
+    .PARAMETER Timer
+        A [System.Diagnostics.Stopwatch] object representing the stopwatch to check.
 
-        .EXAMPLE
-            PS C:\> Get-TimerStatus -Timer $Timer
+    .EXAMPLE
+        PS C:\> Get-TimerStatus -Timer $Timer
 
-        .OUTPUTS
-            System.Boolean
+    .OUTPUTS
+        System.Boolean
     #>
 
     [OutputType([bool])]
-    param
-    (
+    param (
         [Parameter(Mandatory = $true)]
         [System.Diagnostics.Stopwatch]
         $Timer
     )
 
+    # Return the current running state of the supplied stopwatch.
     return $Timer.IsRunning
 }

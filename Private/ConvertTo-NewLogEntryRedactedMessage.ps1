@@ -1,5 +1,4 @@
-function ConvertTo-NewLogEntryRedactedMessage
-{
+function ConvertTo-NewLogEntryRedactedMessage {
     param(
         [string]$Message,
 
@@ -11,10 +10,8 @@ function ConvertTo-NewLogEntryRedactedMessage
 
     $redactedMessage = $Message
 
-    foreach ($item in $Pattern)
-    {
-        if ([string]::IsNullOrWhiteSpace($item))
-        {
+    foreach ($item in $Pattern) {
+        if ([string]::IsNullOrWhiteSpace($item)) {
             continue
         }
 

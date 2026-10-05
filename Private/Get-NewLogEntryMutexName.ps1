@@ -1,8 +1,19 @@
 function Get-NewLogEntryMutexName
 {
-    param([string]$Path)
+    param
+    (
+        [string]$Path
+    )
 
-    $normalizedPath = if ($IsWindows) { $Path.ToUpperInvariant() } else { $Path }
+    $normalizedPath = if ($IsWindows)
+    {
+        $Path.ToUpperInvariant()
+    }
+    else
+    {
+        $Path
+    }
+
     $bytes = [System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes($normalizedPath))
     $hash = [Convert]::ToHexString($bytes).Substring(0, 32)
 

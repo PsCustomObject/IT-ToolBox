@@ -1,9 +1,10 @@
 function Add-NewLogEntryBuffer
 {
-    param([string[]]$Lines)
+    param ([string[]]$Lines)
 
     Initialize-NewLogEntryState
 
+    # Serialize access to the shared buffer so each log append stays thread-safe.
     [System.Threading.Monitor]::Enter($script:NewLogEntryBufferLock)
     try
     {

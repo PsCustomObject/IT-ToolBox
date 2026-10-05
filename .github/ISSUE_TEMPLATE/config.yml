@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project discussion
+    url: https://github.com/PsCustomObject/IT-ToolBox/discussions
+    about: Ask general questions or discuss ideas outside of a bug or feature report.

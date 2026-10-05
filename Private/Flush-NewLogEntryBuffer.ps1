@@ -1,5 +1,4 @@
-function Flush-NewLogEntryBuffer
-{
+function Flush-NewLogEntryBuffer {
     param(
         [string]$Path,
         [ValidateRange(1, 86400)]
@@ -11,11 +10,9 @@ function Flush-NewLogEntryBuffer
     # Serialize snapshot, write, and removal with other operations on this buffer.
     # A failed write leaves entries available for a later retry.
     [System.Threading.Monitor]::Enter($script:NewLogEntryBufferLock)
-    try
-    {
+    try {
         $lines = $script:NewLogEntryBuffer.ToArray()
-        if ($lines.Count -eq 0)
-        {
+        if ($lines.Count -eq 0) {
             return
         }
 
@@ -24,13 +21,11 @@ function Flush-NewLogEntryBuffer
         # Remove only the written prefix, preserving any reentrant append during writing.
         $script:NewLogEntryBuffer.RemoveRange(0, $lines.Count)
         $script:messageBuffer = $script:NewLogEntryBuffer -join [Environment]::NewLine
-        if ($script:messageBuffer.Length -gt 0)
-        {
+        if ($script:messageBuffer.Length -gt 0) {
             $script:messageBuffer += [Environment]::NewLine
         }
     }
-    finally
-    {
+    finally {
         [System.Threading.Monitor]::Exit($script:NewLogEntryBufferLock)
     }
 

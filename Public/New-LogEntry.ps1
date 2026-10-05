@@ -90,8 +90,7 @@ function New-LogEntry
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'Write')]
-    param
-    (
+    param (
         [Parameter(ParameterSetName = 'Write', Mandatory = $true, ValueFromPipeline = $true)]
         [Parameter(ParameterSetName = 'BufferOnly', Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]

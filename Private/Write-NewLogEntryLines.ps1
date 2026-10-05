@@ -1,6 +1,7 @@
 function Write-NewLogEntryLines
 {
-    param(
+    param
+    (
         [string[]]$Lines,
 
         [string]$Path,

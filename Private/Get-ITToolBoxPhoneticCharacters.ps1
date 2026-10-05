@@ -1,5 +1,6 @@
-function Get-ITToolBoxPhoneticCharacters {
-    # Original spelling, labels, categories and alphabet are retained verbatim.
+function Get-ITToolBoxPhoneticCharacters
+{
+    # The source data is preserved verbatim so the phonetic alphabet matches the original reference table.
     $json = @'
     [
         {"Index": "1","Number": "33","AsciiCode": "!","Phonetic": "Exclamation point","Type": "Symbol"},

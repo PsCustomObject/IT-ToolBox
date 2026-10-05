@@ -1,6 +1,10 @@
 function Resolve-NewLogEntryPath
 {
-    param([string]$Path, [string]$CallerScriptPath)
+    param
+    (
+        [string]$Path,
+        [string]$CallerScriptPath
+    )
 
     if (-not [string]::IsNullOrWhiteSpace($Path))
     {
@@ -30,5 +34,6 @@ function Resolve-NewLogEntryPath
     }
 
     $safeTimestamp = [DateTime]::Now.ToString('yyyyMMdd-HHmmss')
+
     return Join-Path -Path $directory -ChildPath ('{0}-LogFile-{1}.log' -f $fileName, $safeTimestamp)
 }

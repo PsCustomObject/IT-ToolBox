@@ -1,37 +1,35 @@
 function Stop-Timer
 {
     <#
-        .SYNOPSIS
-            Function will halt a stopwatch.
+    .SYNOPSIS
+        Stops a stopwatch.
 
-        .DESCRIPTION
-            Function requires a [System.Diagnostics.Stopwatch] object as input and will invoke the stop() method to hald its execution.
+    .DESCRIPTION
+        Requires a [System.Diagnostics.Stopwatch] object and calls its Stop() method.
+        If no exception is raised, the function returns $true.
 
-            If no exceptions are returned function will return $True.
+    .PARAMETER Timer
+        The stopwatch instance to stop.
 
-        .PARAMETER Timer
-            A [System.Diagnostics.Stopwatch] representing the stopwatch to stop.
+    .EXAMPLE
+        Stop-Timer -Timer $Timer
 
-        .EXAMPLE
-            PS C:\> Stop-Timer -Timer $Timer
-
-        .OUTPUTS
-            System.Boolean
+    .OUTPUTS
+        System.Boolean
     #>
 
     [OutputType([bool])]
-    param
-    (
+    param (
         [Parameter(Mandatory = $true)]
         [System.Diagnostics.Stopwatch]$Timer
     )
 
     Begin
     {
-        # Save current configuration
+        # Preserve the caller's current preference so it can be restored after the stop attempt.
         [string]$currentConfig = $ErrorActionPreference
 
-        # Update configuration
+        # Fail fast so the catch block can report stopwatch-stop errors consistently.
         $ErrorActionPreference = 'Stop'
     }
 
@@ -39,19 +37,18 @@ function Stop-Timer
     {
         try
         {
-            # Stop timer
+            # Stop the supplied stopwatch.
             $Timer.Stop()
 
             return $true
         }
         catch
         {
-            # Save exception
+            # Capture the exception text for verbose output without changing the caller's state.
             [string]$reportedException = $Error[0].Exception.Message
 
             Write-Warning -Message 'Exception reported while halting stopwatch - Use the -Verbose parameter for more details'
 
-            # Check we have an exception message
             if ([string]::IsNullOrEmpty($reportedException) -eq $false)
             {
                 Write-Verbose -Message $reportedException
@@ -67,7 +64,7 @@ function Stop-Timer
 
     End
     {
-        # Revert back configuration
+        # Restore the original error-action preference after the stopwatch operation finishes.
         $ErrorActionPreference = $currentConfig
     }
 }

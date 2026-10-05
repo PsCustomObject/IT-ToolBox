@@ -1,5 +1,4 @@
-function Format-NewLogEntry
-{
+function Format-NewLogEntry {
     param(
         [string]$Message,
 
@@ -12,10 +11,8 @@ function Format-NewLogEntry
     $currentDate = [DateTime]::Now.ToString('[MM/dd/yyyy hh:mm:ss tt]')
     $messageLines = [regex]::Split($Message, '\r\n|\n|\r')
 
-    foreach ($messageLine in $messageLines)
-    {
-        if ($SuppressTag)
-        {
+    foreach ($messageLine in $messageLines) {
+        if ($SuppressTag) {
             '{0} - {1}' -f $currentDate, $messageLine
             continue
         }

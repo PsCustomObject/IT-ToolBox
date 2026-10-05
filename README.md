@@ -1,13 +1,104 @@
 # IT-ToolBox
 
-Reusable infrastructure automation utilities originally developed for Windows
-enterprise administration. Version 3 modernizes the module in small, tested steps.
+[![PowerShell 7.4+](https://img.shields.io/badge/PowerShell-7.4%2B-5391FE?logo=powershell)](https://github.com/PowerShell/PowerShell)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Status: Alpha Preview](https://img.shields.io/badge/status-alpha%20preview-orange.svg)](./CHANGELOG.md)
+
+PowerShell utilities for enterprise automation, secure logging, identity validation,
+and cross-platform operational tooling.
+
+IT-ToolBox is a practical PowerShell module for real-world admin and infrastructure
+workflows. It is designed for teams that want explicit validation, secure defaults,
+and portable behavior without hidden magic or fragile assumptions.
+
+## Why it matters
+
+Operational work is full of small but expensive failures: invalid input, inconsistent
+logging, brittle naming rules, and fragile automation built on assumptions. IT-ToolBox
+was created to reduce those failure points with reusable PowerShell utilities that
+prioritize safety, clarity, and portability across modern enterprise environments.
+
+## Why this project exists
+
+This project packages automation patterns that are often built ad hoc in enterprise
+workplaces: filesystem validation, identity and DNS checks, log management, secure
+string handling, and operational diagnostics. The result is a reusable toolkit that
+prioritizes clarity, safety, and portability instead of one-off script logic.
+
+## Portfolio highlights
+
+- Cross-platform PowerShell 7.4+ design
+- Secure logging and string-handling helpers with explicit safety boundaries
+- Validation-first utilities for email, URLs, DNS, DN and UPN checks
+- Operational helpers for timing, script context and filesystem hygiene
+- Modernization work that preserves compatibility where it matters
+- Built for real deployment scenarios, not just demo scripts
+
+## Use cases
+
+IT-ToolBox is designed for the kinds of tasks that recur in real administrative and
+operations work: validating names and input, writing safe logs, enforcing naming rules,
+tracing script context, and handling sensitive values without obscuring the logic behind
+complex utility wrappers.
+
+Typical scenarios include:
+
+- validating user and endpoint input in scripts before commands run
+- adding consistent, redactable logging to automation workflows
+- generating secure random values and supporting password workflows
+- checking script paths and operational timing in automation tooling
+- normalizing filesystem names and reducing operational errors before actions execute
+
+## Project philosophy
+
+The module emphasizes four things: explicit validation, safe defaults, cross-platform
+compatibility, and operational clarity. The goal is not to hide behavior behind clever
+abstractions, but to provide reliable building blocks that are easy to reason about,
+review, and adapt in production automation.
+
+## At a glance
+
+| Area | Examples |
+| --- | --- |
+| Logging and operations | `New-LogEntry`, `New-Timer`, `Get-ElapsedTime`, `Stop-Timer` |
+| Validation | `Test-IsEmail`, `Test-IsUrl`, `Test-IsValidDn`, `Test-IsValidUpn` |
+| Identity and AD helpers | `Get-ReportChain`, `Convert-LogonTimestamp`, `Test-RegistryValue` |
+| Security and data handling | `New-StringEncryption`, `New-StringDecryption`, `New-PhoneticPassword`, `Get-StringHashCode` |
+
+## Documentation map
+
+- [Contributing guide](./CONTRIBUTING.md)
+- [Packaging and build notes](./docs/Packaging.md)
+- [Integration review](./docs/Integrations.md)
+- [Changelog](./CHANGELOG.md)
+- [Security policy](./SECURITY.md)
+
+## Project status and roadmap
+
+This repository is currently an active modernization preview. The codebase is intended
+for practical use, but the project is still evolving and compatibility expectations
+should be reviewed before adopting it broadly in production automation.
+
+Current roadmap focus:
+
+- preserve the modern PowerShell 7.4+ compatibility baseline
+- keep validation behavior explicit and predictable
+- improve operational safety and logging semantics
+- maintain a clean migration path from legacy patterns
+- document integration boundaries and supported dependencies clearly
 
 ## Status and requirements
 
-This is the **3.0.0-alpha1 modernization preview**, not the completed modernization release.
-Requires PowerShell 7.4 or later (Core edition). Windows PowerShell 5.1 is not supported.
-The module imports without WinSCP, GnuPG, Active Directory or Exchange dependencies.
+This is the **3.0.0-alpha1 modernization preview**, not the completed
+modernization release. Requires PowerShell 7.4 or later (Core edition). Windows
+PowerShell 5.1 is not supported.
+
+The module imports without WinSCP, GnuPG, Active Directory or Exchange
+dependencies. Most utilities run on Windows, Linux and macOS.
+`Test-RegistryValue` is Windows-only; remote `Get-OsUpTime` requires Windows CIM
+cmdlets and a reachable Windows endpoint. `Get-ReportChain` requires an available
+`Get-ADUser` command and access to AD when invoked. Clipboard output requires a
+working platform clipboard backend.
 
 ## Quick start from a clone
 
@@ -44,48 +135,32 @@ git pull --ff-only
 Reload the updated module in PowerShell with
 `Import-Module ./IT-ToolBox.psd1 -Force -ErrorAction Stop`.
 
-Most utilities run on Windows, Linux and macOS. `Test-RegistryValue` is Windows-only;
-remote `Get-OsUpTime` needs Windows CIM cmdlets and a reachable Windows endpoint.
-`Get-ReportChain` needs an available `Get-ADUser` command and access to AD when invoked.
-Clipboard output requires a working platform clipboard backend.
-
 For compatibility details, see [migration from v2](#migration-from-v2), the command
 sections below and [integration ownership](./docs/Integrations.md).
 For development, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-## Supported commands
+## Command coverage
 
-| Command | Purpose |
-| --- | --- |
-| New-LogEntry | File and console logging, buffering, redaction and pipeline input |
-| New-Timer | Start a Stopwatch |
-| Get-TimerStatus | Check whether a Stopwatch is running |
-| Stop-Timer | Stop a Stopwatch |
-| Get-ElapsedTime | Retrieve elapsed time or individual components |
-| Get-ScriptDirectory | Directory of the calling script or an explicit script path |
-| Get-ScriptName | Filename of the calling script or an explicit script path |
-| Test-FileName | Native filename validation; optional Windows-compatible rules |
-| Test-IsValidPath | Native filesystem path syntax; no existence check |
-| Test-IsIP | Standard IPv4/IPv6 literals; strict dotted IPv4 |
-| Test-IsDate | Culture-aware date validation with optional exact format |
-| Test-IsEmail | Common bare email-address syntax, including IDN domains |
-| Test-IsUrl | Absolute HTTP/HTTPS/FTP/FTPS URL syntax |
-| Convert-LogonTimestamp | AD FILETIME conversion with local/UTC output |
-| Get-OsUpTime | Local OS uptime and remote Windows CIM queries |
-| Remove-SpecialCharacters | Preview or apply a recursive filesystem naming policy |
-| Test-RegistryValue | Windows registry value-name existence check |
-| Test-IsValidDn | Practical distinguished-name syntax validation |
-| Test-IsValidUpn | Practical UPN syntax validation |
-| Get-ReportChain | Transitive AD manager report-chain queries |
-| New-StringEncryption | Passphrase-based AES-256-GCM string encryption |
-| New-StringDecryption | Authenticate and decrypt the versioned string format |
-| New-RandomString | Secure random selection from the historical alphabet |
-| New-RandomPassword | Secure random passwords from the historical mixed alphabet |
-| New-PhoneticPassword | Passwords with phonetic spelling and exact category counts |
-| New-ApiRequest | OAuth-style form/JSON client requests |
-| New-StringConversion | Domain-specific character mapping and space handling |
-| Get-StringCheckSum | UTF-8 checksums with selectable digest algorithms |
-| Get-StringHashCode | Standard SHA-256 hex with explicit legacy output mode |
+### Logging, timing and script context
+
+`New-LogEntry`, `New-Timer`, `Get-TimerStatus`, `Stop-Timer`, `Get-ElapsedTime`,
+`Get-ScriptDirectory`, `Get-ScriptName`
+
+### Validation and identity
+
+`Test-FileName`, `Test-IsValidPath`, `Test-IsIP`, `Test-IsDate`, `Test-IsEmail`,
+`Test-IsUrl`, `Test-IsValidDn`, `Test-IsValidUpn`, `Get-ReportChain`
+
+### Security, conversion and data handling
+
+`New-StringEncryption`, `New-StringDecryption`, `New-RandomString`,
+`New-RandomPassword`, `New-PhoneticPassword`, `New-ApiRequest`,
+`New-StringConversion`, `Get-StringCheckSum`, `Get-StringHashCode`
+
+### OS, filesystem and operational helpers
+
+`Convert-LogonTimestamp`, `Get-OsUpTime`, `Remove-SpecialCharacters`,
+`Test-RegistryValue`
 
 ```powershell
 Import-Module ./IT-ToolBox.psd1
@@ -93,6 +168,21 @@ New-LogEntry -LogMessage 'Started' -LogFilePath './automation.log' -NoConsole
 $timer = New-Timer
 Get-ElapsedTime -ElapsedTime $timer
 Stop-Timer -Timer $timer
+```
+
+### Example scenarios
+
+```powershell
+# Validate input before use
+if (-not (Test-IsEmail 'person@example.com')) {
+    throw 'The supplied address is invalid.'
+}
+
+# Add secure, redactable logging
+New-LogEntry -LogMessage 'Processing request' -LogFilePath './automation.log' -Level WARNING
+
+# Create a phonetic password with explicit composition rules
+New-PhoneticPassword -PasswordLength 18 -NoPasswordSpell
 ```
 
 Logging output only enters the success pipeline when requested with `-PassThru`.
@@ -187,7 +277,6 @@ empty or malformed input returns false. Migration from the staged versions:
 email validation no longer accepts a display-name/comment wrapper, and the URL
 regex is replaced with structured parsing and host checks. FTP and FTPS remain
 supported for compatibility; this does not introduce a file-transfer command.
-
 
 ## String encryption
 

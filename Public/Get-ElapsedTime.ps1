@@ -48,10 +48,12 @@ function Get-ElapsedTime
             System.TimeSpan, System.Double, System.Int32
     #>
 
-    [CmdletBinding(DefaultParameterSetName = 'FullOutput',
-                   ConfirmImpact = 'High',
-                   SupportsPaging = $false,
-                   SupportsShouldProcess = $false)]
+    [CmdletBinding(
+        DefaultParameterSetName = 'FullOutput',
+        ConfirmImpact = 'High',
+        SupportsPaging = $false,
+        SupportsShouldProcess = $false
+    )]
     [OutputType([timespan], ParameterSetName = 'FullOutput')]
     [OutputType([int], ParameterSetName = 'Days')]
     [OutputType([int], ParameterSetName = 'Hours')]
@@ -63,39 +65,19 @@ function Get-ElapsedTime
     [OutputType([double], ParameterSetName = 'TotalSeconds')]
     [OutputType([double], ParameterSetName = 'TotalMilliseconds')]
     [OutputType([timespan])]
-    param
-    (
+    param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNull()]
-        [System.Diagnostics.Stopwatch]
-        $ElapsedTime,
-        [Parameter(ParameterSetName = 'Days')]
-        [switch]
-        $Days,
-        [Parameter(ParameterSetName = 'Hours')]
-        [switch]
-        $Hours,
-        [Parameter(ParameterSetName = 'Minutes')]
-        [switch]
-        $Minutes,
-        [Parameter(ParameterSetName = 'Seconds')]
-        [switch]
-        $Seconds,
-        [Parameter(ParameterSetName = 'TotalDays')]
-        [switch]
-        $TotalDays,
-        [Parameter(ParameterSetName = 'TotalHours')]
-        [switch]
-        $TotalHours,
-        [Parameter(ParameterSetName = 'TotalMinutes')]
-        [switch]
-        $TotalMinutes,
-        [Parameter(ParameterSetName = 'TotalSeconds')]
-        [switch]
-        $TotalSeconds,
-        [Parameter(ParameterSetName = 'TotalMilliseconds')]
-        [switch]
-        $TotalMilliseconds
+        [System.Diagnostics.Stopwatch]$ElapsedTime,
+        [Parameter(ParameterSetName = 'Days')][switch]$Days,
+        [Parameter(ParameterSetName = 'Hours')][switch]$Hours,
+        [Parameter(ParameterSetName = 'Minutes')][switch]$Minutes,
+        [Parameter(ParameterSetName = 'Seconds')][switch]$Seconds,
+        [Parameter(ParameterSetName = 'TotalDays')][switch]$TotalDays,
+        [Parameter(ParameterSetName = 'TotalHours')][switch]$TotalHours,
+        [Parameter(ParameterSetName = 'TotalMinutes')][switch]$TotalMinutes,
+        [Parameter(ParameterSetName = 'TotalSeconds')][switch]$TotalSeconds,
+        [Parameter(ParameterSetName = 'TotalMilliseconds')][switch]$TotalMilliseconds
     )
 
     switch ($PsCmdlet.ParameterSetName)

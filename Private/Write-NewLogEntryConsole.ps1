@@ -1,6 +1,7 @@
 function Write-NewLogEntryConsole
 {
-    param(
+    param
+    (
         [string]$Line,
 
         [ValidateSet('INFO', 'WARNING', 'ERROR')]

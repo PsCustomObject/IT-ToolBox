@@ -1,22 +1,24 @@
 function New-Timer
 {
     <#
-        .SYNOPSIS
-            Creates a new stopwatch.
+    .SYNOPSIS
+        Creates a new stopwatch.
 
-        .DESCRIPTION
-            Function will create a new time, using the StopWatch class, allowing measurement of elapsed time in scripts.
+    .DESCRIPTION
+        This function creates a new stopwatch using the System.Diagnostics.Stopwatch class,
+        allowing elapsed time to be measured inside scripts.
 
-        .EXAMPLE
-            PS C:\> New-Timer
+    .EXAMPLE
+        PS C:\> New-Timer
 
-        .NOTES
-            Function takes no parameters and will start a new StopWatch object.
+    .NOTES
+        This function takes no parameters and starts a new stopwatch object.
     #>
 
     [OutputType([System.Diagnostics.Stopwatch])]
     param ()
 
+    # Start a fresh stopwatch for measuring elapsed time.
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
     return $stopwatch
