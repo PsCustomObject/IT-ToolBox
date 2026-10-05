@@ -9,10 +9,12 @@ BeforeAll {
 
 Describe 'Installable module packaging' {
     It 'uses the manifest preview version and conventional module layout' {
-        $package.Version | Should -Be '3.0.0-alpha1'
-        [IO.Path]::GetFileName($package.ArchivePath) | Should -Be 'IT-ToolBox-3.0.0-alpha1.zip'
+        $package.Version | Should -Be '3.0.0-beta1'
+        [IO.Path]::GetFileName($package.ArchivePath) | Should -Be 'IT-ToolBox-3.0.0-beta1.zip'
         Test-ModuleManifest (Join-Path $moduleRoot 'IT-ToolBox.psd1') -ErrorAction Stop | Should -Not -BeNullOrEmpty
-        Test-Path -LiteralPath (Join-Path $moduleRoot 'LICENSE') | Should -BeTrue
+        foreach ($name in @('LICENSE', 'CONTRIBUTING.md', 'SECURITY.md')) {
+            Test-Path -LiteralPath (Join-Path $moduleRoot $name) | Should -BeTrue
+        }
     }
 
     It 'ships only supported code and documentation, excluding development and legacy files' {
@@ -23,9 +25,18 @@ Describe 'Installable module packaging' {
         $files.Count | Should -Be $package.FileCount
         foreach ($file in $files) {
             $relative = [IO.Path]::GetRelativePath($moduleRoot, $file.FullName).Replace('\', '/')
-            $relative | Should -Match '^(IT-ToolBox\.psd1|IT-ToolBox\.psm1|LICENSE|README\.md|CHANGELOG\.md|(Public|Private)/[^/]+\.ps1|docs/[^/]+\.md)$'
+            $relative | Should -Match '^(IT-ToolBox\.psd1|IT-ToolBox\.psm1|LICENSE|README\.md|CHANGELOG\.md|CONTRIBUTING\.md|SECURITY\.md|(Public|Private)/[^/]+\.ps1|docs/[^/]+\.md)$'
             $original = Join-Path $sourceRoot $relative
             (Get-FileHash -LiteralPath $file.FullName).Hash | Should -Be (Get-FileHash -LiteralPath $original).Hash
+        }
+    }
+
+    It 'resolves relative documentation links in the packaged README' {
+        $readme = Get-Content -LiteralPath (Join-Path $moduleRoot 'README.md') -Raw
+        $links = [regex]::Matches($readme, '\]\((\./[^)#]+)(?:#[^)]*)?\)')
+        $links.Count | Should -BeGreaterThan 0
+        foreach ($link in $links) {
+            Test-Path -LiteralPath (Join-Path $moduleRoot $link.Groups[1].Value) | Should -BeTrue
         }
     }
 

@@ -4,7 +4,12 @@
 
 Please do not open a public issue for security-sensitive problems.
 
-Instead, contact the project maintainer privately through the repository's preferred security reporting path and provide the following details:
+Use [GitHub private vulnerability reporting](https://github.com/PsCustomObject/IT-ToolBox/security/advisories/new).
+Sign in to GitHub to submit a private report. If private reporting is unavailable,
+open a general issue asking the maintainer to enable it, without including
+vulnerability details, secrets or reproduction steps.
+
+Include the following details in the private report:
 
 - a clear description of the issue
 - the affected command, script, or workflow

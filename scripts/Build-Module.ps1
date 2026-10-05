@@ -57,7 +57,7 @@ try
 {
     $null = [IO.Directory]::CreateDirectory($moduleRoot)
 
-    $files = @(foreach ($name in @('IT-ToolBox.psd1', 'IT-ToolBox.psm1', 'LICENSE', 'README.md', 'CHANGELOG.md'))
+    $files = @(foreach ($name in @('IT-ToolBox.psd1', 'IT-ToolBox.psm1', 'LICENSE', 'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md'))
         {
             Get-Item -LiteralPath (Join-Path $sourceRoot $name)
         })

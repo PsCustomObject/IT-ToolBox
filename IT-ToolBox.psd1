@@ -47,7 +47,7 @@
             Tags = @('Infrastructure', 'Automation', 'Logging')
             LicenseUri = 'https://github.com/PsCustomObject/IT-ToolBox/blob/master/LICENSE'
             ProjectUri = 'https://github.com/PsCustomObject/IT-ToolBox'
-            Prerelease = 'alpha1'
+            Prerelease = 'beta1'
         }
     }
 }

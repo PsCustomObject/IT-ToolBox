@@ -1,10 +1,28 @@
-## Preview documentation refresh (unreleased)
+# IT-ToolBox - Change History
+
+## 3.0.0-beta1 - 2026-10-05
+
+The modernization review is complete. This beta retains the 29-command API and
+PowerShell 7.4 baseline. Live AD, remote CIM and service authentication still
+require integration validation. This entry does not announce a GitHub release
+or PowerShell Gallery publication.
+
+### Beta release preparation
+
+- Promote manifest prerelease metadata from alpha1 to beta1.
+- Improve project documentation, command help and code formatting.
+- Add contributor templates and a security policy.
+- Include the contributing guide and security policy in installable archives.
+- Restore explicit four-space indentation and branch-selection instructions.
+- Consolidate completed modernization history below and retain older releases.
+
+### Preview documentation refresh
 
 - Document cloning, local import, updates, command help and platform requirements.
 - Clarify v2 migration boundaries and supported preview commands.
 - Add contributing instructions for feature branches, four-space style and CI.
 
-## Supported module packaging (unreleased)
+### Supported module packaging
 
 - Add a local ZIP builder with conventional IT-ToolBox/version module layout.
 - Package supported code and documentation only; exclude legacy and development files.
@@ -12,7 +30,7 @@
 - Add real archive-content and isolated import/logger tests to the three-platform CI.
 - Document preview installation; retain alpha1 metadata without publishing or signing.
 
-## Integration boundary review (unreleased)
+### Integration boundary review
 
 - Remove the obsolete Close-AzureSession helper and document service-specific authentication ownership.
 - Remove the process-wide certificate-validation bypass snippet; retain Git history.
@@ -23,7 +41,7 @@
 - Add isolated import/reload regression coverage for TLS, sessions and archive exclusion.
 - Retain the 29-command supported API and alpha1 preview version.
 
-## Script-context helper restoration (unreleased)
+### Script-context helper restoration
 
 - Restore Get-ScriptDirectory and Get-ScriptName; export twenty-nine commands.
 - Resolve the immediately calling script rather than module-scoped invocation data.
@@ -32,7 +50,7 @@
 - Remove dependence on the externally supplied hostinvocation variable.
 - Add real script, nested/dot-sourced caller and isolated interactive regression tests.
 
-## AD helper restoration (unreleased)
+### AD helper restoration
 
 - Restore Test-IsValidDn, Test-IsValidUpn and Get-ReportChain; export twenty-seven commands.
 - Replace DN/UPN regexes with documented practical syntax policies and pipeline support.
@@ -43,7 +61,7 @@
 - Keep ActiveDirectory optional at import; add mocked query and syntax regression tests.
 - Complete migration of all former Staging/v3 candidates.
 
-## Filesystem naming and registry restoration (unreleased)
+### Filesystem naming and registry restoration
 
 - Restore Remove-SpecialCharacters and Test-RegistryValue; export twenty-four commands.
 - Preserve the historical punctuation policy; return a rename preview by default.
@@ -54,7 +72,7 @@
 - Propagate operational failures and document platform and non-transactional behavior.
 - Add real filesystem tests and Windows-only temporary HKCU integration tests.
 
-## Timestamp and uptime restoration (unreleased)
+### Timestamp and uptime restoration
 
 - Restore Convert-LogonTimestamp and Get-OsUpTime; export twenty-two supported commands.
 - Preserve local DateTime and default date formatting; add UTC and pipeline conversion.
@@ -65,7 +83,7 @@
 - Propagate errors without changing caller preferences; document remote Windows requirements.
 - Add boundary, culture, local uptime and mocked CIM regression tests.
 
-## Email and URL validation restoration (unreleased)
+### Email and URL validation restoration
 
 - Restore Test-IsEmail and Test-IsUrl; export twenty supported commands.
 - Preserve email parameter aliases and the HTTP/HTTPS/FTP/FTPS scheme set.
@@ -75,7 +93,7 @@
 - Document intentional validation-policy changes and reduce staged candidates to seven.
 - Add 96 validator cases covering boundaries, Unicode, IPv6 and malformed inputs.
 
-## Logging and timer audit fixes (unreleased)
+### Logging and timer audit fixes
 
 - Treat redaction replacement text literally, preventing regex substitutions from reinserting secrets.
 - Serialize buffer snapshot/write/removal; retain entries after failed writes and preserve appended entries.
@@ -84,7 +102,7 @@
 - Require a non-null stopwatch in every Get-ElapsedTime parameter set.
 - Add regression tests and concurrent-process file-write coverage.
 
-## String utilities restoration (unreleased)
+### String utilities restoration
 
 - Restore character conversion, string checksums and SHA-256 hashing.
 - Preserve the character map while fixing index leakage and default space handling.
@@ -93,7 +111,7 @@
 - Default SHA-256 output to hexadecimal; expose LegacyFormat for old comparisons.
 - Add behavioral and known-vector tests.
 
-## API request restoration (unreleased)
+### API request restoration
 
 - Restore New-ApiRequest with independent optional-parameter handling.
 - Accept header dictionaries; correctly serialize JSON or form authentication fields.
@@ -101,7 +119,7 @@
 - Disable automatic redirects and expose a connection timeout.
 - Propagate request failures; add mocked tests with no network or credentials.
 
-## Password-generation restoration (unreleased)
+### Password-generation restoration
 
 - Restore New-RandomString, New-RandomPassword and New-PhoneticPassword.
 - Use secure unbiased integer selection and Fisher-Yates composition shuffling.
@@ -110,20 +128,20 @@
 - Validate lengths/counts and remove the old random-password alphabet-length cap.
 - Add behavioral tests with mocked console and clipboard operations.
 
-## Authenticated string encryption (unreleased)
+### Authenticated string encryption
 
 - Restore New-StringEncryption/New-StringDecryption with AES-256-GCM and PBKDF2-HMAC-SHA256.
 - Require explicit passphrases, generate random salts/nonces, authenticate ciphertext.
 - Add a bounded versioned format and independent interoperability/tampering tests.
 - Preserve original legacy decoding code; document intentional ciphertext/API changes.
 
-## Validation restoration (unreleased)
+### Validation restoration
 
 - Restore filename/path, IP and date validators with documented semantics and tests.
 - Correct filename character scanning; add Windows-compatible device-name checks.
 - Reject ambiguous IPv4 shorthand; allow explicit date culture and exact format.
 
-# 3.0.0-alpha1 (unreleased)
+### Module foundation
 
 - Establish a PowerShell 7.4 Core module foundation with five explicit exports.
 - Adopt the tested New-LogEntry implementation and private helpers.
@@ -133,7 +151,6 @@
 - Retain other candidate utilities in Staging/v3 and historical helpers in Legacy.
 - Remove obsolete CLR/.NET Framework constraints and stale FileList entries.
 
-# IT-ToolBox - Change History
 
 ## Version 2.2.3.3 - 10.10.2020
 
