@@ -1,3 +1,11 @@
+## Supported module packaging (unreleased)
+
+- Add a local ZIP builder with conventional IT-ToolBox/version module layout.
+- Package supported code and documentation only; exclude legacy and development files.
+- Validate staged syntax and manifest; refuse to overwrite existing archives.
+- Add real archive-content and isolated import/logger tests to the three-platform CI.
+- Document preview installation; retain alpha1 metadata without publishing or signing.
+
 ## Integration boundary review (unreleased)
 
 - Remove the obsolete Close-AzureSession helper and document service-specific authentication ownership.
