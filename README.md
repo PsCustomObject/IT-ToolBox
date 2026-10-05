@@ -26,6 +26,8 @@ The foundation imports without WinSCP, GnuPG, Active Directory or Exchange depen
 | Test-IsUrl | Absolute HTTP/HTTPS/FTP/FTPS URL syntax |
 | Convert-LogonTimestamp | AD FILETIME conversion with local/UTC output |
 | Get-OsUpTime | Local OS uptime and remote Windows CIM queries |
+| Remove-SpecialCharacters | Preview or apply a recursive filesystem naming policy |
+| Test-RegistryValue | Windows registry value-name existence check |
 | New-StringEncryption | Passphrase-based AES-256-GCM string encryption |
 | New-StringDecryption | Authenticate and decrypt the versioned string format |
 | New-RandomString | Secure random selection from the historical alphabet |
@@ -62,10 +64,9 @@ Redaction is opt-in and does not guarantee detection of every secret.
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
 - `Legacy/` retains string encryption, Exchange and script-context helpers for reference.
-- `Staging/v3/` retains 5 candidate commands pending tests and compatibility fixes.
-  These cover report chains, character removal, distinguished names,
-  user principal names and registry values. They are not currently exported.
-- Only the twenty-two listed commands are exported. Private helpers, variables and aliases
+- `Staging/v3/` retains 3 candidate commands pending tests and compatibility fixes.
+  These cover report chains, distinguished names and user principal names. They are not currently exported.
+- Only the twenty-four listed commands are exported. Private helpers, variables and aliases
   are not exported. Existing calls to other v2 commands require the v2 release until
   those commands return to the supported API.
 - The module GUID and Git history are preserved.
@@ -282,3 +283,44 @@ is not changed.
 
 Tests cover actual local uptime and mocked remote query/session behavior. Remote
 Windows connectivity and authentication have not been integration-tested.
+
+## Filesystem naming policy and registry values
+
+`Remove-SpecialCharacters` scans descendant files and directories, including hidden
+items, and replaces the original punctuation list with a hyphen. Spaces and Unicode
+are preserved. Despite its name, it operates on filesystem names, not input strings,
+and its policy is not universal filename validation. The root is never renamed.
+
+```powershell
+# Preview first; records include Path, NewName, DestinationPath, HasCollision and Status.
+Remove-SpecialCharacters -ItemsPath './files'
+Remove-SpecialCharacters -ItemsPath './files' -AutoFix -WhatIf
+Remove-SpecialCharacters -ItemsPath './files' -AutoFix
+```
+
+Preview is the default and creates no files unless logging is requested. AutoFix
+preflights existing destinations and duplicate proposed names before any rename,
+then processes deepest items first. Collision checks are conservatively insensitive
+to case on Windows and macOS, and case-sensitive on Linux. Links and junctions are
+not renamed or followed. Literal paths prevent wildcard expansion. Rename errors
+terminate; this is not a transaction and an I/O failure can leave earlier renames
+completed. Reported paths describe individual operations before ancestor renames.
+Avoid changing the tree concurrently with this command.
+
+The historical `-LogActivites` spelling remains supported, with `-LogActivities` as
+an alias. An optional `-LogFilePath` overrides the default activity log inside the
+root directory. Log paths that participate in the rename plan or lie inside a
+directory being renamed are rejected before writes. Only affected-item records
+are logged; WhatIf suppresses logging.
+This replaces the staged implementation's silent default output, fixed C:\Temp
+logging and swallowed errors.
+
+`Test-RegistryValue -Path 'HKCU:\Software\Example' -Value 'Enabled'` is Windows-only.
+It checks literal value names, case-insensitively, and returns true for existing
+empty strings or zero data. Use `-Value ''` for an unnamed/default value. Missing
+keys or values return false; permission failures and other operational errors
+terminate. Non-Registry provider paths are rejected. This does not inspect remote
+registries or select an alternate registry view.
+
+Filesystem tests use real temporary trees. Windows CI additionally exercises real
+temporary HKCU keys; those registry integration tests are skipped on Linux/macOS.
