@@ -13,7 +13,7 @@ their documented optional dependencies when explicitly invoked.
 | PGP / OpenPGP | Excluded | Dedicated encryption module; backend design is separate from string AES-GCM |
 | AzureAD session helper | Historical source in Legacy/ | Explicit Graph or Entra authentication for directory operations |
 | Azure resource sessions | No wrapper | Az.Accounts owns its Azure context; it is distinct from Graph |
-| Exchange Server remoting | Historical source in Legacy/ | Separate review against a specific server and client environment |
+| Exchange Server remoting | Legacy wrappers removed | Use the documented Exchange Server management workflow for the target environment |
 | Exchange Online | No wrapper | ExchangeOnlineManagement owns authentication and disconnection |
 | Global certificate bypass | Removed | Configure certificate trust for the endpoint instead |
 
@@ -25,23 +25,16 @@ module to Graph PowerShell; this is more than a command-name substitution.
 Graph/Entra directory authentication and Az resource contexts are distinct. The old command must not be
 aliased to a function that clears a different service's credentials or context.
 
-New-ExchangeSession targets an on-premises Microsoft.Exchange remoting endpoint;
-it is not an Exchange Online connection helper. Its legacy implementation prompts
-in the default parameter set regardless of AskCredentials, can prompt again or add
-Credential twice, and only forwards Authentication when explicitly bound despite
-its documented Kerberos default. It accepts plaintext passwords. Force and UseHttp
-branch on parameter presence rather than the switch's boolean value.
+New-ExchangeSession and Close-ExchangeSession have been removed from the repository's
+current tree. Their historical implementations targeted on-premises remoting and
+had credential handling, session-selection and error-reporting defects. Git history
+retains the source if needed; they are not part of the supported v3 API.
 
-Close-ExchangeSession uses an undefined sessionObject in its all-sessions branch,
-breaks after the first iteration, and does not remove default on-premises sessions
-in that branch. ID selection bypasses Online filtering, the name parameter set
-cannot bind Online, and broad catches report removal failures as missing sessions.
-These implementations are preserved for reference, not advertised as operational.
-
-Exchange Online uses Connect-ExchangeOnline and Disconnect-ExchangeOnline from
-ExchangeOnlineManagement. Its modern connections cannot be identified or cleaned
-up reliably by matching Get-PSSession computer names. On-premises remoting has a
-different lifecycle and platform/authentication requirements.
+Use Connect-ExchangeOnline and Disconnect-ExchangeOnline directly from Microsoft's
+ExchangeOnlineManagement module for Exchange Online. IT-ToolBox does not wrap these
+commands, install that module or manage its sessions. Exchange Server on-premises
+has a separate management workflow; ExchangeOnlineManagement is not a general
+replacement for its remote PowerShell endpoint.
 
 The removed Enable-SelfSignedCertificate snippet registered a type whose Ignore
 method could accept every server certificate through ServicePointManager. The

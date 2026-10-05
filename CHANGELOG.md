@@ -2,7 +2,8 @@
 
 - Archive Close-AzureSession in Legacy; document its missing Test-AzureSession dependency.
 - Remove the process-wide certificate-validation bypass snippet; retain Git history.
-- Document Exchange credential/session-selection defects and separate service lifecycles.
+- Remove legacy New-ExchangeSession and Close-ExchangeSession; retain their Git history.
+- Delegate Exchange Online connection management to ExchangeOnlineManagement.
 - Keep WinSCP/SCP and PGP/OpenPGP assigned to their own module projects.
 - Replace the stale staging placeholder and correct README test coverage.
 - Add isolated import/reload regression coverage for TLS, sessions and archive exclusion.

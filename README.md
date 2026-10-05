@@ -68,7 +68,7 @@ Redaction is opt-in and does not guarantee detection of every secret.
 
 - SCP and GnuPG wrappers and bundled WinSCP binaries are removed. Separate modules
   will own file transfer and OpenPGP; no replacement is bundled here.
-- `Legacy/` retains historical string encryption, Exchange and AzureAD helpers for reference.
+- `Legacy/` retains historical string encryption and AzureAD helpers for reference.
 - All commands formerly retained in `Staging/v3/` now have supported implementations.
   Its README records the migration; historical service integrations remain excluded.
 - Only the twenty-nine listed commands are exported. Private helpers, variables and aliases
@@ -405,8 +405,9 @@ MyInvocation or silently return a module filename.
 WinSCP/SCP and PGP/OpenPGP are separate module projects. No transfer backend or PGP
 backend is bundled into this module; AES-GCM string encryption remains independent.
 
-The remaining AzureAD and Exchange helpers are historical source, not supported
-session-management commands. The process-wide certificate-bypass snippet has been
+The AzureAD helper is historical source, not a supported session-management command.
+The legacy Exchange wrappers have been removed; use ExchangeOnlineManagement
+directly for Exchange Online. The process-wide certificate-bypass snippet has been
 removed. Import regression tests verify that loading and reloading IT-ToolBox leaves
 TLS callbacks, service sessions and caller preferences alone, and excludes archived
 and staged code. See [the integration review](./docs/Integrations.md) for defects,
