@@ -1,5 +1,16 @@
 # IT-ToolBox - Change History
 
+## 3.0.0 - 2026-10-14
+
+- Remove beta prerelease metadata; retain the 29-command API and PowerShell 7.4 baseline.
+- Add a prominent community testing invitation with actionable bug-report guidance.
+- Align README, packaging documentation and security support status with 3.0.0.
+- Update archive regression expectations for the stable version.
+
+Live AD, remote CIM and service authentication remain unverified against real
+endpoints. This entry records release preparation; a GitHub release or Gallery
+publication is a separate action.
+
 ## 3.0.0-beta1 - 2026-10-05
 
 The modernization review is complete. This beta retains the 29-command API and
