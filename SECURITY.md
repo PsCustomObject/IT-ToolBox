@@ -22,7 +22,9 @@ If a report touches credentials, secrets, or sensitive operational data, redact 
 
 ## Supported versions
 
-This project is currently in active preview development. Security fixes are prioritized based on impact and maintainability, but the project does not yet provide a formal long-term support matrix for every version.
+Security fixes target the latest 3.x release. Older major versions and archived
+legacy helpers are not maintained. Report issues against the current version
+where possible; fixes are prioritized based on impact and maintainability.
 
 ## Security expectations
 

@@ -8,9 +8,9 @@ BeforeAll {
 }
 
 Describe 'Installable module packaging' {
-    It 'uses the manifest preview version and conventional module layout' {
-        $package.Version | Should -Be '3.0.0-beta1'
-        [IO.Path]::GetFileName($package.ArchivePath) | Should -Be 'IT-ToolBox-3.0.0-beta1.zip'
+    It 'uses the manifest release version and conventional module layout' {
+        $package.Version | Should -Be '3.0.0'
+        [IO.Path]::GetFileName($package.ArchivePath) | Should -Be 'IT-ToolBox-3.0.0.zip'
         Test-ModuleManifest (Join-Path $moduleRoot 'IT-ToolBox.psd1') -ErrorAction Stop | Should -Not -BeNullOrEmpty
         foreach ($name in @('LICENSE', 'CONTRIBUTING.md', 'SECURITY.md')) {
             Test-Path -LiteralPath (Join-Path $moduleRoot $name) | Should -BeTrue

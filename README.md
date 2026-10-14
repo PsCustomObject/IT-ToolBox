@@ -2,7 +2,16 @@
 
 [![PowerShell 7.4+](https://img.shields.io/badge/PowerShell-7.4%2B-5391FE?logo=powershell)](https://github.com/PowerShell/PowerShell)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Status: Beta Preview](https://img.shields.io/badge/status-beta%20preview-orange.svg)](./CHANGELOG.md)
+[![Version: 3.0.0](https://img.shields.io/badge/version-3.0.0-blue.svg)](./CHANGELOG.md)
+[![Testing wanted](https://img.shields.io/badge/testing-wanted-yellow.svg)](https://github.com/PsCustomObject/IT-ToolBox/issues/new/choose)
+
+> **Testing wanted — help validate IT-ToolBox 3.0.0 in real environments.**
+> Feedback is especially useful for Windows AD report chains, remote CIM uptime,
+> API authentication and platform clipboard behavior.
+> [Report a bug](https://github.com/PsCustomObject/IT-ToolBox/issues/new/choose)
+> with the command, expected/actual result, OS, PowerShell version and commit or
+> module version. Redact credentials and private data; report vulnerabilities
+> through [the private security reporting route](./SECURITY.md).
 
 PowerShell utilities for enterprise automation, secure logging, identity validation,
 and cross-platform operational tooling.
@@ -75,9 +84,9 @@ review, and adapt in production automation.
 
 ## Project status and roadmap
 
-This repository is currently an active modernization preview. The codebase is intended
-for practical use, but the project is still evolving and compatibility expectations
-should be reviewed before adopting it broadly in production automation.
+The module now targets the **3.0.0 release**. The supported API is covered by
+cross-platform regression tests. Community testing is welcome, particularly for
+the live integrations described below. Review the v2 migration notes before upgrading.
 
 Current roadmap focus:
 
@@ -89,7 +98,7 @@ Current roadmap focus:
 
 ## Status and requirements
 
-This is the **3.0.0-beta1 modernization preview**. The modernization review is
+This is **IT-ToolBox 3.0.0**. The modernization review is
 complete; live AD, remote CIM and service authentication remain unverified.
 Requires PowerShell 7.4 or later (Core edition). Windows
 PowerShell 5.1 is not supported.
@@ -123,7 +132,7 @@ New-PhoneticPassword -PasswordLength 16 -NoPasswordSpell
 
 This imports the local manifest; it does not install the module globally. Import it
 again in each new PowerShell session, using an absolute path when running elsewhere.
-The master branch contains ongoing preview development. Record the commit used by
+The master branch contains ongoing development. Record the commit used by
 your automation with `git rev-parse HEAD`; updating your clone can change behavior.
 
 To update an existing clone, first commit or otherwise preserve local changes, then:
@@ -216,7 +225,7 @@ Redaction is opt-in and does not guarantee detection of every secret.
 
 ## Tests and CI
 
-For a clean installable preview archive, run `./scripts/Build-Module.ps1` in
+For a clean installable module archive, run `./scripts/Build-Module.ps1` in
 PowerShell after running the tests. The archive includes supported module code
 and documentation, excluding Legacy, Staging and development files. See
 [build and installation instructions](./docs/Packaging.md). Nothing is published

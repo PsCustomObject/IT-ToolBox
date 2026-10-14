@@ -5,7 +5,7 @@
     Author = 'Daniele Catanesi - PsCustomObject'
     CompanyName = 'Community'
     Copyright = '(c) Daniele Catanesi. MIT License.'
-    Description = 'Reusable infrastructure automation utilities. PowerShell 7 modernization foundation.'
+    Description = 'Reusable infrastructure automation utilities. PowerShell 7 infrastructure utilities.'
     PowerShellVersion = '7.4'
     CompatiblePSEditions = @('Core')
     FunctionsToExport = @(
@@ -47,7 +47,6 @@
             Tags = @('Infrastructure', 'Automation', 'Logging')
             LicenseUri = 'https://github.com/PsCustomObject/IT-ToolBox/blob/master/LICENSE'
             ProjectUri = 'https://github.com/PsCustomObject/IT-ToolBox'
-            Prerelease = 'beta1'
         }
     }
 }
